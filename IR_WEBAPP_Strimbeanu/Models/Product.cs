@@ -16,7 +16,11 @@ namespace IR_WEBAPP_Strimbeanu.Models
 
         public string LongDescription { get; set; } = string.Empty;
 
-        public string ImageUrl { get; set; } = string.Empty;
+        // Thumbnail for the product
+        public string ThumbnailUrl { get; set; } = string.Empty;
+
+        // Collection of images
+        public List<ProductImage> Images { get; set; } = new List<ProductImage>();
 
         public string PdfUrl { get; set; } = string.Empty;
 
@@ -26,5 +30,19 @@ namespace IR_WEBAPP_Strimbeanu.Models
         // Navigation property
         [ForeignKey("CategoryId")]
         public Category? Category { get; set; }
+    }
+
+    public class ProductImage
+    {
+        [Key]
+        public int Id { get; set; }
+
+        public string ImageUrl { get; set; } = string.Empty;
+
+        // Foreign key reference to the Product
+        public int ProductId { get; set; }
+
+        [ForeignKey("ProductId")]
+        public Product? Product { get; set; }
     }
 }

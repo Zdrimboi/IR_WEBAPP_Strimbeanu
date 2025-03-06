@@ -8,76 +8,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IR_WEBAPP_Strimbeanu.Migrations
 {
     /// <inheritdoc />
-    public partial class mig3 : Migration
+    public partial class mig1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "Products",
-                keyColumn: "Id",
-                keyValue: 1);
-
-            migrationBuilder.DeleteData(
-                table: "Products",
-                keyColumn: "Id",
-                keyValue: 2);
-
-            migrationBuilder.DeleteData(
-                table: "Products",
-                keyColumn: "Id",
-                keyValue: 3);
-
-            migrationBuilder.DeleteData(
-                table: "Products",
-                keyColumn: "Id",
-                keyValue: 4);
-
-            migrationBuilder.DeleteData(
-                table: "Products",
-                keyColumn: "Id",
-                keyValue: 5);
-
-            migrationBuilder.DeleteData(
-                table: "Products",
-                keyColumn: "Id",
-                keyValue: 6);
-
-            migrationBuilder.DeleteData(
-                table: "Products",
-                keyColumn: "Id",
-                keyValue: 7);
-
-            migrationBuilder.DeleteData(
-                table: "Products",
-                keyColumn: "Id",
-                keyValue: 8);
-
-            migrationBuilder.DeleteData(
-                table: "Products",
-                keyColumn: "Id",
-                keyValue: 9);
-
-            migrationBuilder.DeleteData(
-                table: "Products",
-                keyColumn: "Id",
-                keyValue: 10);
-
-            migrationBuilder.DeleteData(
-                table: "Categories",
-                keyColumn: "Id",
-                keyValue: 1);
-
-            migrationBuilder.DeleteData(
-                table: "Categories",
-                keyColumn: "Id",
-                keyValue: 2);
-
-            migrationBuilder.DeleteData(
-                table: "Categories",
-                keyColumn: "Id",
-                keyValue: 3);
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -115,6 +50,19 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -223,6 +171,104 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ShortDescription = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    LongDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ThumbnailUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PdfUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductImages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductImages_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Electronics" },
+                    { 2, "Books" },
+                    { 3, "Furniture" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "CategoryId", "LongDescription", "Name", "PdfUrl", "ShortDescription", "ThumbnailUrl" },
+                values: new object[,]
+                {
+                    { 1, 1, "High-performance Laptop Apple MacBook", "Laptop Apple MacBook Air 13-inch", "/docs/laptop.pdf", "Laptop Apple MacBook", "/images/laptop1.jpg" },
+                    { 2, 1, "Latest Android smartphone", "Smartphone", "/docs/phone.pdf", "Android Phone", "/images/phone1.jpg" },
+                    { 3, 1, "Wireless noise-canceling headphones", "Headphones", "/docs/headphones.pdf", "Noise-canceling", "/images/headphones1.jpg" },
+                    { 4, 2, "Learn C# from scratch", "C# Programming", "/docs/csharp.pdf", "C# Book", "/images/csharp1.jpg" },
+                    { 5, 2, "Master Blazor and .NET", "Blazor Guide", "/docs/blazor.pdf", "Blazor Development", "/images/blazor1.jpg" },
+                    { 6, 2, "Understand software design principles", "Software Design Patterns", "/docs/designpatterns.pdf", "Design Patterns", "/images/designpatterns1.jpg" },
+                    { 7, 3, "Comfortable office chair with lumbar support", "Office Chair", "/docs/chair.pdf", "Ergonomic Chair", "/images/chair1.jpg" },
+                    { 8, 3, "Modern wooden office desk", "Desk", "/docs/desk.pdf", "Wooden Desk", "/images/desk1.jpg" },
+                    { 9, 3, "Spacious bookshelf for organizing books", "Bookshelf", "/docs/bookshelf.pdf", "Wooden Shelf", "/images/bookshelf1.jpg" },
+                    { 10, 3, "Energy-efficient LED table lamp", "Table Lamp", "/docs/lamp.pdf", "LED Lamp", "/images/lamp1.jpg" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ProductImages",
+                columns: new[] { "Id", "ImageUrl", "ProductId" },
+                values: new object[,]
+                {
+                    { 1, "/images/laptop1.jpg", 1 },
+                    { 2, "/images/laptop2.jpg", 1 },
+                    { 3, "/images/phone1.avif", 2 },
+                    { 4, "/images/phone2.jpg", 2 },
+                    { 5, "/images/headphones1.jpg", 3 },
+                    { 6, "/images/headphones2.jpg", 3 },
+                    { 7, "/images/csharp1.jpg", 4 },
+                    { 8, "/images/csharp2.jpg", 4 },
+                    { 9, "/images/blazor1.jpg", 5 },
+                    { 10, "/images/blazor2.jpg", 5 },
+                    { 11, "/images/designpatterns1.jpg", 6 },
+                    { 12, "/images/designpatterns2.jpg", 6 },
+                    { 13, "/images/chair1.jpg", 7 },
+                    { 14, "/images/chair2.jpg", 7 },
+                    { 15, "/images/desk1.jpg", 8 },
+                    { 16, "/images/desk2.jpg", 8 },
+                    { 17, "/images/bookshelf1.jpg", 9 },
+                    { 18, "/images/bookshelf2.jpg", 9 },
+                    { 19, "/images/lamp1.jpg", 10 },
+                    { 20, "/images/lamp2.jpg", 10 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -261,6 +307,16 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductImages_ProductId",
+                table: "ProductImages",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_CategoryId",
+                table: "Products",
+                column: "CategoryId");
         }
 
         /// <inheritdoc />
@@ -282,37 +338,19 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ProductImages");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "Id", "Name" },
-                values: new object[,]
-                {
-                    { 1, "Electronics" },
-                    { 2, "Books" },
-                    { 3, "Furniture" }
-                });
+            migrationBuilder.DropTable(
+                name: "Products");
 
-            migrationBuilder.InsertData(
-                table: "Products",
-                columns: new[] { "Id", "CategoryId", "ImageUrl", "LongDescription", "Name", "PdfUrl", "ShortDescription" },
-                values: new object[,]
-                {
-                    { 1, 1, "/images/laptop.jpg", "High-performance gaming laptop", "Laptop", "/docs/laptop.pdf", "Gaming Laptop" },
-                    { 2, 1, "/images/phone.jpg", "Latest Android smartphone", "Smartphone", "/docs/phone.pdf", "Android Phone" },
-                    { 3, 1, "/images/headphones.jpg", "Wireless noise-canceling headphones", "Headphones", "/docs/headphones.pdf", "Noise-canceling" },
-                    { 4, 2, "/images/csharp.jpg", "Learn C# from scratch", "C# Programming", "/docs/csharp.pdf", "C# Book" },
-                    { 5, 2, "/images/blazor.jpg", "Master Blazor and .NET", "Blazor Guide", "/docs/blazor.pdf", "Blazor Development" },
-                    { 6, 2, "/images/designpatterns.jpg", "Understand software design principles", "Software Design Patterns", "/docs/designpatterns.pdf", "Design Patterns" },
-                    { 7, 3, "/images/chair.jpg", "Comfortable office chair with lumbar support", "Office Chair", "/docs/chair.pdf", "Ergonomic Chair" },
-                    { 8, 3, "/images/desk.jpg", "Modern wooden office desk", "Desk", "/docs/desk.pdf", "Wooden Desk" },
-                    { 9, 3, "/images/bookshelf.jpg", "Spacious bookshelf for organizing books", "Bookshelf", "/docs/bookshelf.pdf", "Wooden Shelf" },
-                    { 10, 3, "/images/lamp.jpg", "Energy-efficient LED table lamp", "Table Lamp", "/docs/lamp.pdf", "LED Lamp" }
-                });
+            migrationBuilder.DropTable(
+                name: "Categories");
         }
     }
 }

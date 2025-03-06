@@ -133,10 +133,6 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("LongDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -155,6 +151,10 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("ThumbnailUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -166,101 +166,245 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
-                            ImageUrl = "/images/laptop.jpg",
-                            LongDescription = "High-performance gaming laptop",
-                            Name = "Laptop",
+                            LongDescription = "High-performance Laptop Apple MacBook",
+                            Name = "Laptop Apple MacBook Air 13-inch",
                             PdfUrl = "/docs/laptop.pdf",
-                            ShortDescription = "Gaming Laptop"
+                            ShortDescription = "Laptop Apple MacBook",
+                            ThumbnailUrl = "/images/laptop1.jpg"
                         },
                         new
                         {
                             Id = 2,
                             CategoryId = 1,
-                            ImageUrl = "/images/phone.jpg",
                             LongDescription = "Latest Android smartphone",
                             Name = "Smartphone",
                             PdfUrl = "/docs/phone.pdf",
-                            ShortDescription = "Android Phone"
+                            ShortDescription = "Android Phone",
+                            ThumbnailUrl = "/images/phone1.jpg"
                         },
                         new
                         {
                             Id = 3,
                             CategoryId = 1,
-                            ImageUrl = "/images/headphones.jpg",
                             LongDescription = "Wireless noise-canceling headphones",
                             Name = "Headphones",
                             PdfUrl = "/docs/headphones.pdf",
-                            ShortDescription = "Noise-canceling"
+                            ShortDescription = "Noise-canceling",
+                            ThumbnailUrl = "/images/headphones1.jpg"
                         },
                         new
                         {
                             Id = 4,
                             CategoryId = 2,
-                            ImageUrl = "/images/csharp.jpg",
                             LongDescription = "Learn C# from scratch",
                             Name = "C# Programming",
                             PdfUrl = "/docs/csharp.pdf",
-                            ShortDescription = "C# Book"
+                            ShortDescription = "C# Book",
+                            ThumbnailUrl = "/images/csharp1.jpg"
                         },
                         new
                         {
                             Id = 5,
                             CategoryId = 2,
-                            ImageUrl = "/images/blazor.jpg",
                             LongDescription = "Master Blazor and .NET",
                             Name = "Blazor Guide",
                             PdfUrl = "/docs/blazor.pdf",
-                            ShortDescription = "Blazor Development"
+                            ShortDescription = "Blazor Development",
+                            ThumbnailUrl = "/images/blazor1.jpg"
                         },
                         new
                         {
                             Id = 6,
                             CategoryId = 2,
-                            ImageUrl = "/images/designpatterns.jpg",
                             LongDescription = "Understand software design principles",
                             Name = "Software Design Patterns",
                             PdfUrl = "/docs/designpatterns.pdf",
-                            ShortDescription = "Design Patterns"
+                            ShortDescription = "Design Patterns",
+                            ThumbnailUrl = "/images/designpatterns1.jpg"
                         },
                         new
                         {
                             Id = 7,
                             CategoryId = 3,
-                            ImageUrl = "/images/chair.jpg",
                             LongDescription = "Comfortable office chair with lumbar support",
                             Name = "Office Chair",
                             PdfUrl = "/docs/chair.pdf",
-                            ShortDescription = "Ergonomic Chair"
+                            ShortDescription = "Ergonomic Chair",
+                            ThumbnailUrl = "/images/chair1.jpg"
                         },
                         new
                         {
                             Id = 8,
                             CategoryId = 3,
-                            ImageUrl = "/images/desk.jpg",
                             LongDescription = "Modern wooden office desk",
                             Name = "Desk",
                             PdfUrl = "/docs/desk.pdf",
-                            ShortDescription = "Wooden Desk"
+                            ShortDescription = "Wooden Desk",
+                            ThumbnailUrl = "/images/desk1.jpg"
                         },
                         new
                         {
                             Id = 9,
                             CategoryId = 3,
-                            ImageUrl = "/images/bookshelf.jpg",
                             LongDescription = "Spacious bookshelf for organizing books",
                             Name = "Bookshelf",
                             PdfUrl = "/docs/bookshelf.pdf",
-                            ShortDescription = "Wooden Shelf"
+                            ShortDescription = "Wooden Shelf",
+                            ThumbnailUrl = "/images/bookshelf1.jpg"
                         },
                         new
                         {
                             Id = 10,
                             CategoryId = 3,
-                            ImageUrl = "/images/lamp.jpg",
                             LongDescription = "Energy-efficient LED table lamp",
                             Name = "Table Lamp",
                             PdfUrl = "/docs/lamp.pdf",
-                            ShortDescription = "LED Lamp"
+                            ShortDescription = "LED Lamp",
+                            ThumbnailUrl = "/images/lamp1.jpg"
+                        });
+                });
+
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ImageUrl = "/images/laptop1.jpg",
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ImageUrl = "/images/laptop2.jpg",
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ImageUrl = "/images/phone1.avif",
+                            ProductId = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ImageUrl = "/images/phone2.jpg",
+                            ProductId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ImageUrl = "/images/headphones1.jpg",
+                            ProductId = 3
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ImageUrl = "/images/headphones2.jpg",
+                            ProductId = 3
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ImageUrl = "/images/csharp1.jpg",
+                            ProductId = 4
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ImageUrl = "/images/csharp2.jpg",
+                            ProductId = 4
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ImageUrl = "/images/blazor1.jpg",
+                            ProductId = 5
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ImageUrl = "/images/blazor2.jpg",
+                            ProductId = 5
+                        },
+                        new
+                        {
+                            Id = 11,
+                            ImageUrl = "/images/designpatterns1.jpg",
+                            ProductId = 6
+                        },
+                        new
+                        {
+                            Id = 12,
+                            ImageUrl = "/images/designpatterns2.jpg",
+                            ProductId = 6
+                        },
+                        new
+                        {
+                            Id = 13,
+                            ImageUrl = "/images/chair1.jpg",
+                            ProductId = 7
+                        },
+                        new
+                        {
+                            Id = 14,
+                            ImageUrl = "/images/chair2.jpg",
+                            ProductId = 7
+                        },
+                        new
+                        {
+                            Id = 15,
+                            ImageUrl = "/images/desk1.jpg",
+                            ProductId = 8
+                        },
+                        new
+                        {
+                            Id = 16,
+                            ImageUrl = "/images/desk2.jpg",
+                            ProductId = 8
+                        },
+                        new
+                        {
+                            Id = 17,
+                            ImageUrl = "/images/bookshelf1.jpg",
+                            ProductId = 9
+                        },
+                        new
+                        {
+                            Id = 18,
+                            ImageUrl = "/images/bookshelf2.jpg",
+                            ProductId = 9
+                        },
+                        new
+                        {
+                            Id = 19,
+                            ImageUrl = "/images/lamp1.jpg",
+                            ProductId = 10
+                        },
+                        new
+                        {
+                            Id = 20,
+                            ImageUrl = "/images/lamp2.jpg",
+                            ProductId = 10
                         });
                 });
 
@@ -408,6 +552,17 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.ProductImage", b =>
+                {
+                    b.HasOne("IR_WEBAPP_Strimbeanu.Models.Product", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -462,6 +617,11 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
             modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.Product", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

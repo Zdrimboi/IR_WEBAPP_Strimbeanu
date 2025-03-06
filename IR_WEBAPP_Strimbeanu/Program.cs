@@ -59,7 +59,7 @@ else
 }
 
 app.UseHttpsRedirection();
-
+app.UseRouting();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
