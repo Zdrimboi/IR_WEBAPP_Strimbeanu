@@ -1,0 +1,36 @@
+﻿@page "/products"
+@using IR_WEBAPP_Strimbeanu.Data
+@using IR_WEBAPP_Strimbeanu.Models
+@using Microsoft.EntityFrameworkCore
+@inject ApplicationDbContext DbContext
+
+<h3>Products</h3>
+
+@if (products == null)
+{
+        <p>Loading...</p>
+}
+else
+{
+        <ul>
+        @foreach (var product in products)
+        {
+                    <li>
+                        <h4>@product.Name (@product.Category?.Name)</h4>  @* Show category name *@
+                        <p>@product.ShortDescription</p>
+                        <img src="@product.ImageUrl" alt="@product.Name" width="150" />
+                        <br />
+                        <a href="@product.PdfUrl" target="_blank">Download PDF</a>
+                    </li>
+        }
+        </ul>
+}
+
+@code {
+    private List<Product>? products;
+
+    protected override void OnInitialized()
+    {
+        products = DbContext.Products.Include(p => p.Category).ToList();
+    }
+}
