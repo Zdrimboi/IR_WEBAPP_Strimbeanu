@@ -1,8 +1,13 @@
 ﻿@page "/products"
 @using IR_WEBAPP_Strimbeanu.Data
 @using IR_WEBAPP_Strimbeanu.Models
+@using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
+@inject CartService CartService
 @inject ApplicationDbContext DbContext
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
 
 <h3>Products</h3>
 
@@ -11,41 +16,45 @@
     <option value="0">All Categories</option>
     @foreach (var category in categories)
     {
-            <option value="@category.Id">@category.Name</option>
+        <option value="@category.Id">@category.Name</option>
     }
 </select>
 
 @if (products == null)
 {
-        <p>Loading...</p>
+    <p>Loading...</p>
 }
 else
 {
-        <div class="container">
-            <div class="row">
+    <div class="container">
+        <div class="row">
             @foreach (var product in products)
             {
-                        <div class="col-md-6 mb-4"> @* Two items per row *@
-                            <div class="card">
-                                <a href="/product/@product.Id">
-                                    <img src="@product.ThumbnailUrl" class="card-img-top" alt="@product.Name" style="max-height: 200px; object-fit: contain;">
-                                </a>
-                                <div class="card-body">
-                                    <h5 class="card-title">@product.Name (@product.Category?.Name)</h5>
-                                    <p class="card-text">@product.ShortDescription</p>
-                                    <a href="@product.PdfUrl" class="btn btn-primary" target="_blank">Download PDF</a>
-                                </div>
-                            </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <a href="/product/@product.Id">
+                            <img src="@product.ThumbnailUrl" class="card-img-top" alt="@product.Name" style="max-height: 200px; object-fit: contain;">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">@product.Name (@product.Category?.Name)</h5>
+                            <p class="card-text">@product.ShortDescription</p>
+                            <button class="btn btn-warning" @onclick="() => Console.WriteLine(product)">Add to Cart</button>
                         </div>
+                    </div>
+                </div>
             }
-            </div>
         </div>
+    </div>
 }
+
+<h4>Your Cart</h4>
+<p>Items in cart: @cartItemCount</p>
 
 @code {
     private List<Product>? products;
     private List<Category>? categories;
     private int selectedCategoryId = 0;
+    private int cartItemCount = 0;
 
     protected override void OnInitialized()
     {
@@ -72,5 +81,32 @@ else
     {
         LoadProducts();
         StateHasChanged();
+    }
+
+    private async Task AddToCart(Product product)
+    {
+        // Log to check if this is being called
+        Console.WriteLine($"AddToCart called for product: {product.Name}");
+
+        // Get the current authentication state
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var applicationUser = await UserManager.GetUserAsync(user);
+            if (applicationUser != null)
+            {
+                // Add product to the cart
+                await CartService.AddToCartAsync(applicationUser, product);
+
+                // Update the cart item count
+                var updatedCart = await CartService.GetCartAsync(applicationUser);
+                cartItemCount = updatedCart.Items.Count();
+
+                // Optionally, navigate to the cart page
+                Navigation.NavigateTo("/cart");
+            }
+        }
     }
 }

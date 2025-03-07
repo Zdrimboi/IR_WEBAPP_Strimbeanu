@@ -49,3 +49,66 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+.product-page {
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+}
+
+.product-image {
+    flex: 1;
+    padding: 15px;
+    max-width: 100%;
+}
+
+.product-info {
+    flex: 2;
+    padding: 15px;
+}
+
+.product-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.category-name {
+    font-size: 18px;
+    color: #888;
+}
+
+.product-description {
+    font-size: 16px;
+    color: #555;
+    margin-top: 10px;
+}
+
+.gallery {
+    margin-top: 20px;
+}
+
+    .gallery img {
+        border-radius: 5px;
+        margin: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+.product-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #FF9900;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+    .product-button:hover {
+        background-color: #FF6600;
+    }
+
+.row {
+    margin-top: 15px;
+}

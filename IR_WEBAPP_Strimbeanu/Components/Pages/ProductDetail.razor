@@ -4,6 +4,9 @@
 @using Microsoft.EntityFrameworkCore
 @inject ApplicationDbContext DbContext
 
+@* Add custom styles for better presentation *@
+<style>app.css</style>
+
 <h3>Product Details</h3>
 
 @if (product == null)
@@ -12,11 +15,15 @@
 }
 else
 {
-        <div class="card">
-            <img src="@product.ThumbnailUrl" class="card-img-top" alt="@product.Name">
-            <div class="card-body">
-                <h5 class="card-title">@product.Name (@product.Category?.Name)</h5>
-                <p class="card-text">@product.LongDescription</p>
+        <div class="product-page">
+            <div class="product-image">
+                <img src="@product.ThumbnailUrl" class="img-fluid" alt="@product.Name">
+            </div>
+
+            <div class="product-info">
+                <h1 class="product-title">@product.Name</h1>
+                <p class="category-name">Category: @product.Category?.Name</p>
+                <p class="product-description">@product.LongDescription</p>
 
                 <h5>Gallery</h5>
                 <div class="row">
