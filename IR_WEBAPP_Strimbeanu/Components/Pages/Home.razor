@@ -1,12 +1,16 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<h3>Button Click Counter</h3>
 
-<button class="btn btn-warning" @onclick="OnButtonClick">Click Me</button>
+<p>Button clicked @counter times.</p>
+
+<button class="btn btn-primary" @onclick="IncrementCounter">Click me</button>
 
 @code {
-    private void OnButtonClick()
+    private int counter = 0;
+
+    private void IncrementCounter()
     {
-        Console.WriteLine("Button clicked!");
+        counter++;
     }
 }

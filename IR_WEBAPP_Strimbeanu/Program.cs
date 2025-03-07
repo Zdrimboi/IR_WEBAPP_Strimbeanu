@@ -7,9 +7,9 @@ using IR_WEBAPP_Strimbeanu.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -52,7 +52,6 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 
 var app = builder.Build();
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -70,8 +69,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
@@ -83,9 +80,8 @@ using (var scope = app.Services.CreateScope())
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     await EnsureRolesAndAdminUser(roleManager, userManager);
 }
-
-
-app.Run();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 async Task EnsureRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
 {
@@ -116,3 +112,6 @@ async Task EnsureRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserMa
         }
     }
 }
+
+
+app.Run();

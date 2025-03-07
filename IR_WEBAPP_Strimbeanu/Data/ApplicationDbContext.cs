@@ -71,5 +71,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             new ProductImage { Id = 19, ProductId = 10, ImageUrl = "/images/lamp1.jpg" },
             new ProductImage { Id = 20, ProductId = 10, ImageUrl = "/images/lamp2.jpg" }
         );
+
     }
 }
