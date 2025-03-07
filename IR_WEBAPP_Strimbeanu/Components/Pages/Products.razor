@@ -8,6 +8,7 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager Navigation
+@rendermode InteractiveServer
 
 <h3>Products</h3>
 
@@ -38,7 +39,7 @@ else
                         <div class="card-body">
                             <h5 class="card-title">@product.Name (@product.Category?.Name)</h5>
                             <p class="card-text">@product.ShortDescription</p>
-                            <button class="btn btn-warning" @onclick="() => Console.WriteLine(product)">Add to Cart</button>
+                                    <button class="btn btn-warning" @onclick="() => AddToCart(product)">Add to Cart</button>
                         </div>
                     </div>
                 </div>
