@@ -1,5 +1,48 @@
-﻿<h3>ProductDetail</h3>
+﻿@page "/product/{id:int}"
+@using IR_WEBAPP_Strimbeanu.Data
+@using IR_WEBAPP_Strimbeanu.Models
+@using Microsoft.EntityFrameworkCore
+@inject ApplicationDbContext DbContext
+
+<h3>Product Details</h3>
+
+@if (product == null)
+{
+        <p>Loading...</p>
+}
+else
+{
+        <div class="card">
+            <img src="@product.ThumbnailUrl" class="card-img-top" alt="@product.Name">
+            <div class="card-body">
+                <h5 class="card-title">@product.Name (@product.Category?.Name)</h5>
+                <p class="card-text">@product.LongDescription</p>
+
+                <h5>Gallery</h5>
+                <div class="row">
+                @foreach (var image in product.Images)
+                {
+                            <div class="col-md-4">
+                                <img src="@image.ImageUrl" class="img-fluid" alt="Product Image">
+                            </div>
+                }
+                </div>
+
+                <h5>Download PDF</h5>
+                <a href="@product.PdfUrl" class="btn btn-primary" target="_blank">Download PDF</a>
+            </div>
+        </div>
+}
 
 @code {
+    [Parameter] public int id { get; set; }
+    private Product? product;
 
+    protected override void OnInitialized()
+    {
+        product = DbContext.Products
+            .Include(p => p.Category)
+            .Include(p => p.Images)
+            .FirstOrDefault(p => p.Id == id);
+    }
 }
