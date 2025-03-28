@@ -7,6 +7,9 @@ using IR_WEBAPP_Strimbeanu.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<BlazorSliders.SliderInterop>();
+
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 

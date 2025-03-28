@@ -35,37 +35,36 @@ public class CartService
         return cart;
     }
 
-    public async Task AddToCartAsync(ApplicationUser user, Product product)
+    public async Task AddToCartAsync(ApplicationUser user, Product product, int quantity)
     {
-        Console.WriteLine("Adding product to cart: " + product.Name);
-        // Get the user's cart
+        Console.WriteLine($"Adding product '{product.Name}' with quantity {quantity} to cart");
+
         var cart = await GetCartAsync(user);
 
         if (cart == null)
         {
             cart = new Cart { UserId = user.Id };
             _dbContext.Carts.Add(cart);
-            Console.WriteLine("Created a new cart for user: " + user.UserName);
+            Console.WriteLine($"Created new cart for user: {user.UserName}");
         }
 
         var cartItem = cart.Items.FirstOrDefault(i => i.ProductId == product.Id);
 
         if (cartItem == null)
         {
-            cartItem = new CartItem { ProductId = product.Id, Quantity = 1 };
+            cartItem = new CartItem { ProductId = product.Id, Quantity = quantity };
             cart.Items.Add(cartItem);
-            Console.WriteLine("Added new item to the cart: " + product.Name);
+            Console.WriteLine($"Added new item '{product.Name}' with quantity {quantity} to cart.");
         }
         else
         {
-            cartItem.Quantity++;
-            Console.WriteLine("Updated quantity of existing item in the cart: " + product.Name);
+            cartItem.Quantity += quantity;
+            Console.WriteLine($"Updated existing item '{product.Name}' to quantity {cartItem.Quantity}");
         }
 
-        await _dbContext.SaveChangesAsync(); // Commit changes to the database
-        Console.WriteLine("Saved cart to the database.");
+        await _dbContext.SaveChangesAsync();
+        Console.WriteLine("Saved cart with updated quantity.");
     }
-
 
     public async Task RemoveFromCartAsync(ApplicationUser user, int productId)
     {

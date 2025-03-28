@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IR_WEBAPP_Strimbeanu.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250307014617_mig3")]
-    partial class mig3
+    [Migration("20250328003748_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -133,6 +133,88 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "user-1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "06a92ce2-0619-4541-a006-1f150b0f36ca",
+                            Email = "user1@test.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER1@TEST.COM",
+                            NormalizedUserName = "USER1@TEST.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEN3kOt8JoKPr/AuLqKUEduPzFjm6ZcJPiCjjg98M6ftmcN1te3WSb4xD0b0JE5qI/A==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "07fd2273-af48-4895-9d9c-32eef01a8f34",
+                            TwoFactorEnabled = false,
+                            UserName = "user1@test.com"
+                        },
+                        new
+                        {
+                            Id = "user-2",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1145ad2f-4351-4c07-a26e-7fe03d2a61dc",
+                            Email = "user2@test.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER2@TEST.COM",
+                            NormalizedUserName = "USER2@TEST.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI+YwQR6XMmAb/lMoL1FfbxUB56FANZ6QgrFHAlujKivLVTyZyUk9qXfBnfeANc3/w==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "05c336ec-29bc-4dc4-8d52-8b9acd9d682f",
+                            TwoFactorEnabled = false,
+                            UserName = "user2@test.com"
+                        },
+                        new
+                        {
+                            Id = "user-3",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "ac47ec09-1f53-49cd-af38-648add6533a5",
+                            Email = "user3@test.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER3@TEST.COM",
+                            NormalizedUserName = "USER3@TEST.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGHC8QMvLg4LLHF3xu0LYHmEYDizsAlmkTSBpl4EXb16DIphwcVzot4wnZC949Cz1Q==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "10cb0288-5d1e-4ec5-b380-7c26cd23e455",
+                            TwoFactorEnabled = false,
+                            UserName = "user3@test.com"
+                        },
+                        new
+                        {
+                            Id = "user-4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "4980c1cb-506e-4f69-9dee-62f92173918f",
+                            Email = "user4@test.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER4@TEST.COM",
+                            NormalizedUserName = "USER4@TEST.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAENAj6prWuoFgtJXnCdt5qx2uVqDlsRMg38R0wTLXQe/ugiwAetSI0IDXFoy4Tpmmmw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "737f905b-7b2b-40b0-a10d-40ee0fd92a98",
+                            TwoFactorEnabled = false,
+                            UserName = "user4@test.com"
+                        },
+                        new
+                        {
+                            Id = "user-5",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "776e02ae-6020-4ee9-b072-01964502825c",
+                            Email = "user5@test.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER5@TEST.COM",
+                            NormalizedUserName = "USER5@TEST.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI8L1Gz6mmOS/sPquGULSlmW1H8wtOR8jjZ8Xxsb2LZMQbiZSNkh7UziKZMCgpMtTA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "f9229a16-fc89-47fd-9335-db3221087770",
+                            TwoFactorEnabled = false,
+                            UserName = "user5@test.com"
+                        });
                 });
 
             modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.Category", b =>
@@ -178,6 +260,9 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<double>("AverageRating")
+                        .HasColumnType("float");
+
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -194,14 +279,23 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("ShortDescription")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
+
                     b.Property<string>("ThumbnailUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UnitsSold")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -213,102 +307,142 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         new
                         {
                             Id = 1,
+                            AverageRating = 4.7000000000000002,
                             CategoryId = 1,
                             LongDescription = "High-performance Laptop Apple MacBook",
                             Name = "Laptop Apple MacBook Air 13-inch",
                             PdfUrl = "/docs/laptop.pdf",
+                            Price = 6499.99m,
                             ShortDescription = "Laptop Apple MacBook",
-                            ThumbnailUrl = "/images/laptop1.jpg"
+                            Stock = 12,
+                            ThumbnailUrl = "/images/laptop1.jpg",
+                            UnitsSold = 50
                         },
                         new
                         {
                             Id = 2,
+                            AverageRating = 4.5,
                             CategoryId = 1,
                             LongDescription = "Latest Android smartphone",
                             Name = "Smartphone",
                             PdfUrl = "/docs/phone.pdf",
+                            Price = 2999.50m,
                             ShortDescription = "Android Phone",
-                            ThumbnailUrl = "/images/phone1.jpg"
+                            Stock = 35,
+                            ThumbnailUrl = "/images/phone1.jpg",
+                            UnitsSold = 120
                         },
                         new
                         {
                             Id = 3,
+                            AverageRating = 4.2999999999999998,
                             CategoryId = 1,
                             LongDescription = "Wireless noise-canceling headphones",
                             Name = "Headphones",
                             PdfUrl = "/docs/headphones.pdf",
+                            Price = 499.99m,
                             ShortDescription = "Noise-canceling",
-                            ThumbnailUrl = "/images/headphones1.jpg"
+                            Stock = 20,
+                            ThumbnailUrl = "/images/headphones1.jpg",
+                            UnitsSold = 75
                         },
                         new
                         {
                             Id = 4,
+                            AverageRating = 4.2000000000000002,
                             CategoryId = 2,
                             LongDescription = "Learn C# from scratch",
                             Name = "C# Programming",
                             PdfUrl = "/docs/csharp.pdf",
+                            Price = 149.99m,
                             ShortDescription = "C# Book",
-                            ThumbnailUrl = "/images/csharp1.jpg"
+                            Stock = 80,
+                            ThumbnailUrl = "/images/csharp1.jpg",
+                            UnitsSold = 40
                         },
                         new
                         {
                             Id = 5,
+                            AverageRating = 4.5999999999999996,
                             CategoryId = 2,
                             LongDescription = "Master Blazor and .NET",
                             Name = "Blazor Guide",
                             PdfUrl = "/docs/blazor.pdf",
+                            Price = 199.99m,
                             ShortDescription = "Blazor Development",
-                            ThumbnailUrl = "/images/blazor1.jpg"
+                            Stock = 50,
+                            ThumbnailUrl = "/images/blazor1.jpg",
+                            UnitsSold = 65
                         },
                         new
                         {
                             Id = 6,
+                            AverageRating = 4.0999999999999996,
                             CategoryId = 2,
                             LongDescription = "Understand software design principles",
                             Name = "Software Design Patterns",
                             PdfUrl = "/docs/designpatterns.pdf",
+                            Price = 169.00m,
                             ShortDescription = "Design Patterns",
-                            ThumbnailUrl = "/images/designpatterns1.jpg"
+                            Stock = 40,
+                            ThumbnailUrl = "/images/designpatterns1.jpg",
+                            UnitsSold = 58
                         },
                         new
                         {
                             Id = 7,
+                            AverageRating = 4.4000000000000004,
                             CategoryId = 3,
                             LongDescription = "Comfortable office chair with lumbar support",
                             Name = "Office Chair",
                             PdfUrl = "/docs/chair.pdf",
+                            Price = 899.99m,
                             ShortDescription = "Ergonomic Chair",
-                            ThumbnailUrl = "/images/chair1.jpg"
+                            Stock = 18,
+                            ThumbnailUrl = "/images/chair1.jpg",
+                            UnitsSold = 34
                         },
                         new
                         {
                             Id = 8,
+                            AverageRating = 4.2999999999999998,
                             CategoryId = 3,
                             LongDescription = "Modern wooden office desk",
                             Name = "Desk",
                             PdfUrl = "/docs/desk.pdf",
+                            Price = 1149.99m,
                             ShortDescription = "Wooden Desk",
-                            ThumbnailUrl = "/images/desk1.jpg"
+                            Stock = 15,
+                            ThumbnailUrl = "/images/desk1.jpg",
+                            UnitsSold = 22
                         },
                         new
                         {
                             Id = 9,
+                            AverageRating = 4.2000000000000002,
                             CategoryId = 3,
                             LongDescription = "Spacious bookshelf for organizing books",
                             Name = "Bookshelf",
                             PdfUrl = "/docs/bookshelf.pdf",
+                            Price = 599.50m,
                             ShortDescription = "Wooden Shelf",
-                            ThumbnailUrl = "/images/bookshelf1.jpg"
+                            Stock = 25,
+                            ThumbnailUrl = "/images/bookshelf1.jpg",
+                            UnitsSold = 38
                         },
                         new
                         {
                             Id = 10,
+                            AverageRating = 4.5,
                             CategoryId = 3,
                             LongDescription = "Energy-efficient LED table lamp",
                             Name = "Table Lamp",
                             PdfUrl = "/docs/lamp.pdf",
+                            Price = 149.00m,
                             ShortDescription = "LED Lamp",
-                            ThumbnailUrl = "/images/lamp1.jpg"
+                            Stock = 60,
+                            ThumbnailUrl = "/images/lamp1.jpg",
+                            UnitsSold = 55
                         });
                 });
 
@@ -332,128 +466,380 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductImages");
+                });
+
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.ProductTag", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ProductTags");
+
+                    b.HasData(
+                        new
+                        {
+                            ProductId = 1,
+                            TagId = 4
+                        },
+                        new
+                        {
+                            ProductId = 1,
+                            TagId = 1
+                        },
+                        new
+                        {
+                            ProductId = 2,
+                            TagId = 5
+                        },
+                        new
+                        {
+                            ProductId = 3,
+                            TagId = 3
+                        },
+                        new
+                        {
+                            ProductId = 4,
+                            TagId = 1
+                        },
+                        new
+                        {
+                            ProductId = 5,
+                            TagId = 2
+                        },
+                        new
+                        {
+                            ProductId = 6,
+                            TagId = 3
+                        },
+                        new
+                        {
+                            ProductId = 7,
+                            TagId = 1
+                        },
+                        new
+                        {
+                            ProductId = 8,
+                            TagId = 2
+                        },
+                        new
+                        {
+                            ProductId = 9,
+                            TagId = 5
+                        },
+                        new
+                        {
+                            ProductId = 10,
+                            TagId = 4
+                        });
+                });
+
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reviews");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            ImageUrl = "/images/laptop1.jpg",
-                            ProductId = 1
+                            Comment = "Great product! Review #1",
+                            CreatedAt = new DateTime(2025, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 2,
+                            Rating = 5,
+                            UserId = "user-5"
                         },
                         new
                         {
                             Id = 2,
-                            ImageUrl = "/images/laptop2.jpg",
-                            ProductId = 1
+                            Comment = "Great product! Review #2",
+                            CreatedAt = new DateTime(2025, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 2,
+                            Rating = 4,
+                            UserId = "user-3"
                         },
                         new
                         {
                             Id = 3,
-                            ImageUrl = "/images/phone1.avif",
-                            ProductId = 2
+                            Comment = "Great product! Review #3",
+                            CreatedAt = new DateTime(2024, 4, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 4,
+                            Rating = 4,
+                            UserId = "user-3"
                         },
                         new
                         {
                             Id = 4,
-                            ImageUrl = "/images/phone2.jpg",
-                            ProductId = 2
+                            Comment = "Great product! Review #4",
+                            CreatedAt = new DateTime(2024, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 1,
+                            Rating = 5,
+                            UserId = "user-4"
                         },
                         new
                         {
                             Id = 5,
-                            ImageUrl = "/images/headphones1.jpg",
-                            ProductId = 3
+                            Comment = "Great product! Review #5",
+                            CreatedAt = new DateTime(2025, 2, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 5,
+                            Rating = 4,
+                            UserId = "user-2"
                         },
                         new
                         {
                             Id = 6,
-                            ImageUrl = "/images/headphones2.jpg",
-                            ProductId = 3
+                            Comment = "Great product! Review #6",
+                            CreatedAt = new DateTime(2024, 6, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 2,
+                            Rating = 4,
+                            UserId = "user-5"
                         },
                         new
                         {
                             Id = 7,
-                            ImageUrl = "/images/csharp1.jpg",
-                            ProductId = 4
+                            Comment = "Great product! Review #7",
+                            CreatedAt = new DateTime(2024, 12, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 5,
+                            Rating = 5,
+                            UserId = "user-1"
                         },
                         new
                         {
                             Id = 8,
-                            ImageUrl = "/images/csharp2.jpg",
-                            ProductId = 4
+                            Comment = "Great product! Review #8",
+                            CreatedAt = new DateTime(2024, 11, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 3,
+                            Rating = 5,
+                            UserId = "user-1"
                         },
                         new
                         {
                             Id = 9,
-                            ImageUrl = "/images/blazor1.jpg",
-                            ProductId = 5
+                            Comment = "Great product! Review #9",
+                            CreatedAt = new DateTime(2024, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 5,
+                            Rating = 4,
+                            UserId = "user-1"
                         },
                         new
                         {
                             Id = 10,
-                            ImageUrl = "/images/blazor2.jpg",
-                            ProductId = 5
+                            Comment = "Great product! Review #10",
+                            CreatedAt = new DateTime(2025, 1, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 5,
+                            Rating = 3,
+                            UserId = "user-2"
                         },
                         new
                         {
                             Id = 11,
-                            ImageUrl = "/images/designpatterns1.jpg",
-                            ProductId = 6
+                            Comment = "Great product! Review #11",
+                            CreatedAt = new DateTime(2025, 1, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 2,
+                            Rating = 4,
+                            UserId = "user-4"
                         },
                         new
                         {
                             Id = 12,
-                            ImageUrl = "/images/designpatterns2.jpg",
-                            ProductId = 6
+                            Comment = "Great product! Review #12",
+                            CreatedAt = new DateTime(2025, 2, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 3,
+                            Rating = 4,
+                            UserId = "user-5"
                         },
                         new
                         {
                             Id = 13,
-                            ImageUrl = "/images/chair1.jpg",
-                            ProductId = 7
+                            Comment = "Great product! Review #13",
+                            CreatedAt = new DateTime(2024, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 3,
+                            Rating = 5,
+                            UserId = "user-3"
                         },
                         new
                         {
                             Id = 14,
-                            ImageUrl = "/images/chair2.jpg",
-                            ProductId = 7
+                            Comment = "Great product! Review #14",
+                            CreatedAt = new DateTime(2025, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 5,
+                            Rating = 3,
+                            UserId = "user-3"
                         },
                         new
                         {
                             Id = 15,
-                            ImageUrl = "/images/desk1.jpg",
-                            ProductId = 8
+                            Comment = "Great product! Review #15",
+                            CreatedAt = new DateTime(2025, 2, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 4,
+                            Rating = 3,
+                            UserId = "user-5"
                         },
                         new
                         {
                             Id = 16,
-                            ImageUrl = "/images/desk2.jpg",
-                            ProductId = 8
+                            Comment = "Great product! Review #16",
+                            CreatedAt = new DateTime(2025, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 4,
+                            Rating = 3,
+                            UserId = "user-5"
                         },
                         new
                         {
                             Id = 17,
-                            ImageUrl = "/images/bookshelf1.jpg",
-                            ProductId = 9
+                            Comment = "Great product! Review #17",
+                            CreatedAt = new DateTime(2024, 4, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 4,
+                            Rating = 3,
+                            UserId = "user-3"
                         },
                         new
                         {
                             Id = 18,
-                            ImageUrl = "/images/bookshelf2.jpg",
-                            ProductId = 9
+                            Comment = "Great product! Review #18",
+                            CreatedAt = new DateTime(2024, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 1,
+                            Rating = 5,
+                            UserId = "user-2"
                         },
                         new
                         {
                             Id = 19,
-                            ImageUrl = "/images/lamp1.jpg",
-                            ProductId = 10
+                            Comment = "Great product! Review #19",
+                            CreatedAt = new DateTime(2025, 2, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 2,
+                            Rating = 5,
+                            UserId = "user-2"
                         },
                         new
                         {
                             Id = 20,
-                            ImageUrl = "/images/lamp2.jpg",
-                            ProductId = 10
+                            Comment = "Great product! Review #20",
+                            CreatedAt = new DateTime(2024, 5, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductId = 2,
+                            Rating = 5,
+                            UserId = "user-3"
                         });
+                });
+
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Bestseller"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Eco-Friendly"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Budget"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Premium"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Trending"
+                        });
+                });
+
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.Wishlist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Wishlists");
+                });
+
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.WishlistItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WishlistId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("WishlistId");
+
+                    b.ToTable("WishlistItems");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -637,6 +1023,74 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.ProductTag", b =>
+                {
+                    b.HasOne("IR_WEBAPP_Strimbeanu.Models.Product", "Product")
+                        .WithMany("Tags")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IR_WEBAPP_Strimbeanu.Models.Tag", "Tag")
+                        .WithMany("ProductTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.Review", b =>
+                {
+                    b.HasOne("IR_WEBAPP_Strimbeanu.Models.Product", "Product")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IR_WEBAPP_Strimbeanu.Data.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.Wishlist", b =>
+                {
+                    b.HasOne("IR_WEBAPP_Strimbeanu.Data.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.WishlistItem", b =>
+                {
+                    b.HasOne("IR_WEBAPP_Strimbeanu.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IR_WEBAPP_Strimbeanu.Models.Wishlist", "Wishlist")
+                        .WithMany("Items")
+                        .HasForeignKey("WishlistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Wishlist");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -701,6 +1155,20 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
             modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.Product", b =>
                 {
                     b.Navigation("Images");
+
+                    b.Navigation("Reviews");
+
+                    b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.Tag", b =>
+                {
+                    b.Navigation("ProductTags");
+                });
+
+            modelBuilder.Entity("IR_WEBAPP_Strimbeanu.Models.Wishlist", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

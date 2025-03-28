@@ -1,16 +1,184 @@
 ﻿@page "/"
+@using IR_WEBAPP_Strimbeanu.Data
+@using IR_WEBAPP_Strimbeanu.Models
+@using Microsoft.EntityFrameworkCore
+@inject ApplicationDbContext DbContext
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
-<h3>Button Click Counter</h3>
 
-<p>Button clicked @counter times.</p>
+<div class="container mt-4">
 
-<button class="btn btn-primary" @onclick="IncrementCounter">Click me</button>
+    <!-- 🖼️ Hero Section -->
+    <div class="p-5 mb-4 bg-light rounded-3 shadow">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Welcome to IR WebStore</h1>
+            <p class="col-md-8 fs-4">Explore top-rated products, best deals, and categories tailored for your needs.</p>
+            <a class="btn btn-primary btn-lg" href="/products">Shop Now</a>
+        </div>
+    </div>
+
+    <!-- 🎉 Deal of the Day -->
+    @if (dealOfTheDay != null)
+    {
+            <div class="mb-5">
+                <h3 class="mb-3">🌟 Deal of the Day</h3>
+                <div class="card shadow-sm border-0">
+                    <div class="row g-0 align-items-center">
+                        <div class="col-md-4">
+                            <img src="@dealOfTheDay.ThumbnailUrl" class="img-fluid rounded-start" alt="@dealOfTheDay.Name" style="object-fit: cover; height: 100%; width: 100%;" />
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">@dealOfTheDay.Name</h5>
+                                <p class="card-text">@dealOfTheDay.ShortDescription</p>
+                                <p class="fw-bold">Only @dealOfTheDay.Price.ToString("0.00") RON</p>
+                                <a class="btn btn-success" href="/product/@dealOfTheDay.Id">Grab Deal</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    }
+
+    <!-- 🎠 Carousel Banner -->
+    <div id="featuredCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @for (int i = 0; i < bannerProducts.Count; i++)
+            {
+                var banner = bannerProducts[i];
+                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                        <a href="/product/@banner.Id">
+                            <img src="@banner.ThumbnailUrl" class="d-block w-100" style="height: 300px; object-fit: cover;" alt="@banner.Name" />
+                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+                                <h5>@banner.Name</h5>
+                                <p>@banner.ShortDescription</p>
+                            </div>
+                        </a>
+                    </div>
+            }
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- 🍿 Top Sellers -->
+    <h3 class="mb-4">🔥 Best Sellers</h3>
+    <div class="row mb-5">
+        @foreach (var product in bestSellers)
+        {
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <a href="/product/@product.Id">
+                            <img src="@product.ThumbnailUrl" class="card-img-top" style="object-fit: cover; height: 200px;" />
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="text-muted small">Sold: @product.UnitsSold | ⭐ @product.AverageRating</p>
+                            <p class="fw-bold">@product.Price.ToString("0.00") RON</p>
+                            <a href="/product/@product.Id" class="btn btn-outline-primary w-100">View</a>
+                        </div>
+                    </div>
+                </div>
+        }
+    </div>
+
+    <!-- 🏷️ Categories Section -->
+    <h3 class="mb-4">Shop by Category</h3>
+    <div class="row mb-5">
+        @foreach (var category in categories)
+        {
+                <div class="col-md-4 mb-3">
+                    <a href="/products?categoryId=@category.Id" class="text-decoration-none">
+                        <div class="card text-white bg-dark h-100 shadow">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">@category.Name</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+        }
+    </div>
+
+    <!-- 🛍️ Top Rated -->
+    <h3 class="mb-4">🌟 Top Rated Products</h3>
+    <div class="row">
+        @foreach (var product in topRatedProducts)
+        {
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <a href="/product/@product.Id">
+                            <img src="@product.ThumbnailUrl" class="card-img-top" style="object-fit: cover; height: 200px;" />
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="text-muted small">⭐ @product.AverageRating</p>
+                            <p class="fw-bold">@product.Price.ToString("0.00") RON</p>
+                            <a href="/product/@product.Id" class="btn btn-outline-primary w-100">View</a>
+                        </div>
+                    </div>
+                </div>
+        }
+    </div>
+
+    <!-- 💬 Top Reviews -->
+    <h3 class="my-4">💬 Recent Reviews</h3>
+    <div class="row">
+        @foreach (var review in latestReviews)
+        {
+                <div class="col-md-6 mb-3">
+                    <div class="border rounded p-3">
+                        <strong>@review.User?.UserName</strong> reviewed <strong>@review.Product?.Name</strong>
+                        <span class="text-muted">(@review.CreatedAt.ToShortDateString())</span>
+                        <p class="mb-1">⭐ @review.Rating</p>
+                        <p class="small">@review.Comment</p>
+                    </div>
+                </div>
+        }
+    </div>
+</div>
 
 @code {
-    private int counter = 0;
+    private List<Category> categories = new();
+    private List<Product> bestSellers = new();
+    private List<Product> topRatedProducts = new();
+    private List<Review> latestReviews = new();
+    private List<Product> bannerProducts = new();
+    private Product? dealOfTheDay;
 
-    private void IncrementCounter()
+    protected override async Task OnInitializedAsync()
     {
-        counter++;
+        categories = await DbContext.Categories.ToListAsync();
+
+        bestSellers = await DbContext.Products
+            .OrderByDescending(p => p.UnitsSold)
+            .Take(4)
+            .ToListAsync();
+
+        topRatedProducts = await DbContext.Products
+            .OrderByDescending(p => p.AverageRating)
+            .Take(4)
+            .ToListAsync();
+
+        latestReviews = await DbContext.Reviews
+            .Include(r => r.User)
+            .Include(r => r.Product)
+            .OrderByDescending(r => r.CreatedAt)
+            .Take(6)
+            .ToListAsync();
+
+        bannerProducts = await DbContext.Products
+            .OrderByDescending(p => p.UnitsSold + (int)p.AverageRating * 10)
+            .Take(3)
+            .ToListAsync();
+
+        dealOfTheDay = await DbContext.Products
+            .OrderBy(p => Guid.NewGuid())
+            .FirstOrDefaultAsync();
     }
 }

@@ -13,24 +13,25 @@ namespace IR_WEBAPP_Strimbeanu.Models
 
         [Required, StringLength(255)]
         public string ShortDescription { get; set; } = string.Empty;
-
         public string LongDescription { get; set; } = string.Empty;
 
-        // Thumbnail for the product
         public string ThumbnailUrl { get; set; } = string.Empty;
-
-        // Collection of images
-        public List<ProductImage> Images { get; set; } = new List<ProductImage>();
-
         public string PdfUrl { get; set; } = string.Empty;
 
-        // Foreign Key
-        public int CategoryId { get; set; }
+        public decimal Price { get; set; }
+        public int Stock { get; set; }
+        public int UnitsSold { get; set; } = 0;
 
-        // Navigation property
-        [ForeignKey("CategoryId")]
+        public double AverageRating { get; set; }
+
+        public int CategoryId { get; set; }
         public Category? Category { get; set; }
+
+        public List<ProductImage> Images { get; set; } = new();
+        public List<ProductTag> Tags { get; set; } = new();
+        public List<Review> Reviews { get; set; } = new();
     }
+
 
     public class ProductImage
     {

@@ -1,23 +1,119 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
+@using IR_WEBAPP_Strimbeanu.Data
+@using IR_WEBAPP_Strimbeanu.Models
+@using Microsoft.EntityFrameworkCore
+@inject ApplicationDbContext DbContext
+@inject NavigationManager NavigationManager
+
+<div class="page d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar bg-light border-end">
         <NavMenu />
     </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+    <!-- Main content -->
+    <div class="flex-grow-1 d-flex flex-column">
+
+        <!-- Centered Search Form -->
+        <div class="d-flex justify-content-center py-4 bg-light shadow-sm">
+            <form method="get" action="/products" class="position-relative" style="width: 400px;">
+                <!-- Large, centered search input -->
+                <input name="search"
+                       class="form-control form-control-lg text-center"
+                       style="width:100%;"
+                       placeholder="Search products..."
+                       @bind="searchText"
+                       @bind:event="oninput"
+                       @onfocus="LoadSuggestions"
+                       @onblur="HandleBlur" />
+
+                <!-- Predictive suggestions dropdown -->
+                @if (showSuggestions && suggestions.Any())
+                {
+                        <ul class="list-group position-absolute w-100 bg-white shadow"
+                            style="top:56px; left:0; z-index:999; max-height:200px; overflow-y:auto;">
+                        @foreach (var prod in suggestions)
+                        {
+                                    <li class="list-group-item list-group-item-action"
+                                        @onclick="() => OnSuggestionClicked(prod)">
+                                @prod.Name
+                                    </li>
+                        }
+                        </ul>
+                }
+
+                <!-- Search button below the input -->
+                <div class="d-flex justify-content-center mt-2">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </form>
         </div>
 
-        <article class="content px-4">
+        <!-- Body -->
+        <article class="content p-4 flex-grow-1">
             @Body
         </article>
-    </main>
+    </div>
 </div>
 
+<!-- Blazor error UI -->
 <div id="blazor-error-ui">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code {
+    private string searchText = string.Empty;     // The user’s typed text
+    private bool showSuggestions = true;         // Show/hide the dropdown
+    private List<Product> suggestions = new();    // Top 5 matching products
+
+    /// <summary>
+    /// Loads suggestions if user typed >= 2 chars
+    /// Called by onfocus and oninput on the search box.
+    /// </summary>
+    private async Task LoadSuggestions()
+    {
+        // If typed fewer than 2, hide suggestions
+        if (searchText.Length < 2)
+        {
+            suggestions.Clear();
+            showSuggestions = true;
+            return;
+        }
+
+        showSuggestions = true;
+
+        // Query up to 5 matching products from DB
+        suggestions = await DbContext.Products
+            .Where(p => p.Name.Contains(searchText))
+            .OrderBy(p => p.Name)
+            .Take(5)
+            .ToListAsync();
+
+        // If you want immediate re-render:
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Short delay so the user can click a suggestion before we hide it.
+    /// </summary>
+    private async Task HandleBlur(FocusEventArgs e)
+    {
+        await Task.Delay(200);
+        showSuggestions = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// When the user clicks a suggestion, we fill the search box,
+    /// hide suggestions, and then they can press 'Search'.
+    /// </summary>
+    private void OnSuggestionClicked(Product p)
+    {
+        searchText = p.Name;
+        showSuggestions = false;
+        StateHasChanged();
+    }
+}

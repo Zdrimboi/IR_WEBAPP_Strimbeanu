@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IR_WEBAPP_Strimbeanu.Migrations
 {
     /// <inheritdoc />
-    public partial class mig1 : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -63,6 +63,19 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,6 +204,25 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Wishlists",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Wishlists", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Wishlists_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -201,6 +233,10 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                     LongDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ThumbnailUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PdfUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Stock = table.Column<int>(type: "int", nullable: false),
+                    UnitsSold = table.Column<int>(type: "int", nullable: false),
+                    AverageRating = table.Column<double>(type: "float", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -260,6 +296,97 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ProductTags",
+                columns: table => new
+                {
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    TagId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductTags", x => new { x.ProductId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_ProductTags_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reviews_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WishlistItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    WishlistId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WishlistItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WishlistItems_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WishlistItems_Wishlists_WishlistId",
+                        column: x => x.WishlistId,
+                        principalTable: "Wishlists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { "user-1", 0, "06a92ce2-0619-4541-a006-1f150b0f36ca", "user1@test.com", true, false, null, "USER1@TEST.COM", "USER1@TEST.COM", "AQAAAAIAAYagAAAAEN3kOt8JoKPr/AuLqKUEduPzFjm6ZcJPiCjjg98M6ftmcN1te3WSb4xD0b0JE5qI/A==", null, false, "07fd2273-af48-4895-9d9c-32eef01a8f34", false, "user1@test.com" },
+                    { "user-2", 0, "1145ad2f-4351-4c07-a26e-7fe03d2a61dc", "user2@test.com", true, false, null, "USER2@TEST.COM", "USER2@TEST.COM", "AQAAAAIAAYagAAAAEI+YwQR6XMmAb/lMoL1FfbxUB56FANZ6QgrFHAlujKivLVTyZyUk9qXfBnfeANc3/w==", null, false, "05c336ec-29bc-4dc4-8d52-8b9acd9d682f", false, "user2@test.com" },
+                    { "user-3", 0, "ac47ec09-1f53-49cd-af38-648add6533a5", "user3@test.com", true, false, null, "USER3@TEST.COM", "USER3@TEST.COM", "AQAAAAIAAYagAAAAEGHC8QMvLg4LLHF3xu0LYHmEYDizsAlmkTSBpl4EXb16DIphwcVzot4wnZC949Cz1Q==", null, false, "10cb0288-5d1e-4ec5-b380-7c26cd23e455", false, "user3@test.com" },
+                    { "user-4", 0, "4980c1cb-506e-4f69-9dee-62f92173918f", "user4@test.com", true, false, null, "USER4@TEST.COM", "USER4@TEST.COM", "AQAAAAIAAYagAAAAENAj6prWuoFgtJXnCdt5qx2uVqDlsRMg38R0wTLXQe/ugiwAetSI0IDXFoy4Tpmmmw==", null, false, "737f905b-7b2b-40b0-a10d-40ee0fd92a98", false, "user4@test.com" },
+                    { "user-5", 0, "776e02ae-6020-4ee9-b072-01964502825c", "user5@test.com", true, false, null, "USER5@TEST.COM", "USER5@TEST.COM", "AQAAAAIAAYagAAAAEI8L1Gz6mmOS/sPquGULSlmW1H8wtOR8jjZ8Xxsb2LZMQbiZSNkh7UziKZMCgpMtTA==", null, false, "f9229a16-fc89-47fd-9335-db3221087770", false, "user5@test.com" }
+                });
+
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "Name" },
@@ -271,47 +398,77 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Products",
-                columns: new[] { "Id", "CategoryId", "LongDescription", "Name", "PdfUrl", "ShortDescription", "ThumbnailUrl" },
+                table: "Tags",
+                columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 1, 1, "High-performance Laptop Apple MacBook", "Laptop Apple MacBook Air 13-inch", "/docs/laptop.pdf", "Laptop Apple MacBook", "/images/laptop1.jpg" },
-                    { 2, 1, "Latest Android smartphone", "Smartphone", "/docs/phone.pdf", "Android Phone", "/images/phone1.jpg" },
-                    { 3, 1, "Wireless noise-canceling headphones", "Headphones", "/docs/headphones.pdf", "Noise-canceling", "/images/headphones1.jpg" },
-                    { 4, 2, "Learn C# from scratch", "C# Programming", "/docs/csharp.pdf", "C# Book", "/images/csharp1.jpg" },
-                    { 5, 2, "Master Blazor and .NET", "Blazor Guide", "/docs/blazor.pdf", "Blazor Development", "/images/blazor1.jpg" },
-                    { 6, 2, "Understand software design principles", "Software Design Patterns", "/docs/designpatterns.pdf", "Design Patterns", "/images/designpatterns1.jpg" },
-                    { 7, 3, "Comfortable office chair with lumbar support", "Office Chair", "/docs/chair.pdf", "Ergonomic Chair", "/images/chair1.jpg" },
-                    { 8, 3, "Modern wooden office desk", "Desk", "/docs/desk.pdf", "Wooden Desk", "/images/desk1.jpg" },
-                    { 9, 3, "Spacious bookshelf for organizing books", "Bookshelf", "/docs/bookshelf.pdf", "Wooden Shelf", "/images/bookshelf1.jpg" },
-                    { 10, 3, "Energy-efficient LED table lamp", "Table Lamp", "/docs/lamp.pdf", "LED Lamp", "/images/lamp1.jpg" }
+                    { 1, "Bestseller" },
+                    { 2, "Eco-Friendly" },
+                    { 3, "Budget" },
+                    { 4, "Premium" },
+                    { 5, "Trending" }
                 });
 
             migrationBuilder.InsertData(
-                table: "ProductImages",
-                columns: new[] { "Id", "ImageUrl", "ProductId" },
+                table: "Products",
+                columns: new[] { "Id", "AverageRating", "CategoryId", "LongDescription", "Name", "PdfUrl", "Price", "ShortDescription", "Stock", "ThumbnailUrl", "UnitsSold" },
                 values: new object[,]
                 {
-                    { 1, "/images/laptop1.jpg", 1 },
-                    { 2, "/images/laptop2.jpg", 1 },
-                    { 3, "/images/phone1.avif", 2 },
-                    { 4, "/images/phone2.jpg", 2 },
-                    { 5, "/images/headphones1.jpg", 3 },
-                    { 6, "/images/headphones2.jpg", 3 },
-                    { 7, "/images/csharp1.jpg", 4 },
-                    { 8, "/images/csharp2.jpg", 4 },
-                    { 9, "/images/blazor1.jpg", 5 },
-                    { 10, "/images/blazor2.jpg", 5 },
-                    { 11, "/images/designpatterns1.jpg", 6 },
-                    { 12, "/images/designpatterns2.jpg", 6 },
-                    { 13, "/images/chair1.jpg", 7 },
-                    { 14, "/images/chair2.jpg", 7 },
-                    { 15, "/images/desk1.jpg", 8 },
-                    { 16, "/images/desk2.jpg", 8 },
-                    { 17, "/images/bookshelf1.jpg", 9 },
-                    { 18, "/images/bookshelf2.jpg", 9 },
-                    { 19, "/images/lamp1.jpg", 10 },
-                    { 20, "/images/lamp2.jpg", 10 }
+                    { 1, 4.7000000000000002, 1, "High-performance Laptop Apple MacBook", "Laptop Apple MacBook Air 13-inch", "/docs/laptop.pdf", 6499.99m, "Laptop Apple MacBook", 12, "/images/laptop1.jpg", 50 },
+                    { 2, 4.5, 1, "Latest Android smartphone", "Smartphone", "/docs/phone.pdf", 2999.50m, "Android Phone", 35, "/images/phone1.jpg", 120 },
+                    { 3, 4.2999999999999998, 1, "Wireless noise-canceling headphones", "Headphones", "/docs/headphones.pdf", 499.99m, "Noise-canceling", 20, "/images/headphones1.jpg", 75 },
+                    { 4, 4.2000000000000002, 2, "Learn C# from scratch", "C# Programming", "/docs/csharp.pdf", 149.99m, "C# Book", 80, "/images/csharp1.jpg", 40 },
+                    { 5, 4.5999999999999996, 2, "Master Blazor and .NET", "Blazor Guide", "/docs/blazor.pdf", 199.99m, "Blazor Development", 50, "/images/blazor1.jpg", 65 },
+                    { 6, 4.0999999999999996, 2, "Understand software design principles", "Software Design Patterns", "/docs/designpatterns.pdf", 169.00m, "Design Patterns", 40, "/images/designpatterns1.jpg", 58 },
+                    { 7, 4.4000000000000004, 3, "Comfortable office chair with lumbar support", "Office Chair", "/docs/chair.pdf", 899.99m, "Ergonomic Chair", 18, "/images/chair1.jpg", 34 },
+                    { 8, 4.2999999999999998, 3, "Modern wooden office desk", "Desk", "/docs/desk.pdf", 1149.99m, "Wooden Desk", 15, "/images/desk1.jpg", 22 },
+                    { 9, 4.2000000000000002, 3, "Spacious bookshelf for organizing books", "Bookshelf", "/docs/bookshelf.pdf", 599.50m, "Wooden Shelf", 25, "/images/bookshelf1.jpg", 38 },
+                    { 10, 4.5, 3, "Energy-efficient LED table lamp", "Table Lamp", "/docs/lamp.pdf", 149.00m, "LED Lamp", 60, "/images/lamp1.jpg", 55 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ProductTags",
+                columns: new[] { "ProductId", "TagId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 1, 4 },
+                    { 2, 5 },
+                    { 3, 3 },
+                    { 4, 1 },
+                    { 5, 2 },
+                    { 6, 3 },
+                    { 7, 1 },
+                    { 8, 2 },
+                    { 9, 5 },
+                    { 10, 4 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Reviews",
+                columns: new[] { "Id", "Comment", "CreatedAt", "ProductId", "Rating", "UserId" },
+                values: new object[,]
+                {
+                    { 1, "Great product! Review #1", new DateTime(2025, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 5, "user-5" },
+                    { 2, "Great product! Review #2", new DateTime(2025, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 4, "user-3" },
+                    { 3, "Great product! Review #3", new DateTime(2024, 4, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, 4, "user-3" },
+                    { 4, "Great product! Review #4", new DateTime(2024, 9, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 5, "user-4" },
+                    { 5, "Great product! Review #5", new DateTime(2025, 2, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 4, "user-2" },
+                    { 6, "Great product! Review #6", new DateTime(2024, 6, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 4, "user-5" },
+                    { 7, "Great product! Review #7", new DateTime(2024, 12, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 5, "user-1" },
+                    { 8, "Great product! Review #8", new DateTime(2024, 11, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, 5, "user-1" },
+                    { 9, "Great product! Review #9", new DateTime(2024, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 4, "user-1" },
+                    { 10, "Great product! Review #10", new DateTime(2025, 1, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 3, "user-2" },
+                    { 11, "Great product! Review #11", new DateTime(2025, 1, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 4, "user-4" },
+                    { 12, "Great product! Review #12", new DateTime(2025, 2, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, 4, "user-5" },
+                    { 13, "Great product! Review #13", new DateTime(2024, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, 5, "user-3" },
+                    { 14, "Great product! Review #14", new DateTime(2025, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, 3, "user-3" },
+                    { 15, "Great product! Review #15", new DateTime(2025, 2, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, 3, "user-5" },
+                    { 16, "Great product! Review #16", new DateTime(2025, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, 3, "user-5" },
+                    { 17, "Great product! Review #17", new DateTime(2024, 4, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, 3, "user-3" },
+                    { 18, "Great product! Review #18", new DateTime(2024, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 5, "user-2" },
+                    { 19, "Great product! Review #19", new DateTime(2025, 2, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 5, "user-2" },
+                    { 20, "Great product! Review #20", new DateTime(2024, 5, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 5, "user-3" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -377,6 +534,36 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                 name: "IX_Products_CategoryId",
                 table: "Products",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductTags_TagId",
+                table: "ProductTags",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_ProductId",
+                table: "Reviews",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_UserId",
+                table: "Reviews",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WishlistItems_ProductId",
+                table: "WishlistItems",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WishlistItems_WishlistId",
+                table: "WishlistItems",
+                column: "WishlistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Wishlists_UserId",
+                table: "Wishlists",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -404,19 +591,34 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                 name: "ProductImages");
 
             migrationBuilder.DropTable(
+                name: "ProductTags");
+
+            migrationBuilder.DropTable(
+                name: "Reviews");
+
+            migrationBuilder.DropTable(
+                name: "WishlistItems");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Carts");
 
             migrationBuilder.DropTable(
+                name: "Tags");
+
+            migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Wishlists");
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

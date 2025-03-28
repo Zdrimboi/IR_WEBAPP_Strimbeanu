@@ -14,44 +14,84 @@
 
 @if (cart == null || !cart.Items.Any())
 {
-    <p>Your cart is empty.</p>
+        <p>Your cart is empty.</p>
 }
 else
 {
-    <ul>
-        @foreach (var item in cart.Items)
-        {
-            <li>@item.Product.Name - Quantity: @item.Quantity</li>
-        }
-    </ul>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in cart.Items)
+            {
+                        <tr>
+                            <td>
+                                <img src="@item.Product.ThumbnailUrl" alt="@item.Product.Name" style="width: 60px; height: 60px; object-fit: cover;" />
+                            </td>
+                            <td>@item.Product.Name</td>
+                            <td>@string.Format("{0:0.00}", item.Product.Price) RON</td>
+                            <td>
+                                <input type="number" min="1" class="form-control" @bind="item.Quantity" />
+                            </td>
+                            <td>@string.Format("{0:0.00}", item.Product.Price * item.Quantity) RON</td>
+                            <td>
+                                <button class="btn btn-sm btn-danger" @onclick="() => RemoveItem(item.Product.Id)">Remove</button>
+                            </td>
+                        </tr>
+            }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-end">Total:</td>
+                    <td colspan="2" class="fw-bold">@string.Format("{0:0.00}", TotalPrice) RON</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-success" @onclick="Checkout">Proceed to Checkout</button>
+        </div>
 }
-<button class="btn btn-warning" @onclick="() => Checkout()">Checkout</button>
+
 @code {
     private Cart cart;
-
-    protected void Checkout()
-    {
-        cart = new Cart();
-    }
+    private decimal TotalPrice => cart?.Items.Sum(i => i.Quantity * i.Product.Price) ?? 0;
 
     protected override async Task OnInitializedAsync()
     {
-        // Get the current user's authentication state
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
-        if (user.Identity.IsAuthenticated)
+        if (user.Identity?.IsAuthenticated ?? false)
         {
             var applicationUser = await UserManager.GetUserAsync(user);
-            if (applicationUser != null)
-            {
-                cart = await CartService.GetCartAsync(applicationUser);
-            }
+            cart = await CartService.GetCartAsync(applicationUser);
         }
-        else
+    }
+
+    private async Task RemoveItem(int productId)
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
         {
-            // Handle when the user is not authenticated (optional)
-            cart = null;
+            var applicationUser = await UserManager.GetUserAsync(user);
+            await CartService.RemoveFromCartAsync(applicationUser, productId);
+            cart = await CartService.GetCartAsync(applicationUser);
         }
+    }
+
+    private void Checkout()
+    {
+        Navigation.NavigateTo("/checkout");
     }
 }

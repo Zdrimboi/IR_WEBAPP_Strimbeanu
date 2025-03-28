@@ -1,55 +1,215 @@
 ﻿@page "/product/{id:int}"
 @using IR_WEBAPP_Strimbeanu.Data
 @using IR_WEBAPP_Strimbeanu.Models
+@using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
 @inject ApplicationDbContext DbContext
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CartService CartService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
 
-@* Add custom styles for better presentation *@
-<style>app.css</style>
+<div class="container py-5">
+    @if (product == null)
+    {
+            <div class="alert alert-info">Loading...</div>
+    }
+    else
+    {
+            <div class="row">
+                <!-- Product Images -->
+                <div class="col-md-6">
+                    <img src="@product.ThumbnailUrl" class="img-fluid rounded shadow-sm" alt="@product.Name" />
+                    <div class="mt-3">
+                        <h5>Gallery</h5>
+                        <div class="row">
+                        @foreach (var image in product.Images)
+                        {
+                                    <div class="col-4 mb-2">
+                                        <img src="@image.ImageUrl" class="img-thumbnail" alt="Product Image" />
+                                    </div>
+                        }
+                        </div>
+                    </div>
+                </div>
 
-<h3>Product Details</h3>
+                <!-- Product Info -->
+                <div class="col-md-6">
+                    <h2 class="fw-bold">@product.Name</h2>
+                    <p class="text-muted">Category: @product.Category?.Name</p>
+                    <p class="lead">@product.LongDescription</p>
 
-@if (product == null)
-{
-        <p>Loading...</p>
-}
-else
-{
-        <div class="product-page">
-            <div class="product-image">
-                <img src="@product.ThumbnailUrl" class="img-fluid" alt="@product.Name">
+                    <div class="mb-3">
+                        <p><strong>Price:</strong> @product.Price.ToString("0.00") RON</p>
+                        <p><strong>Stock:</strong> @product.Stock</p>
+                        <p><strong>Units Sold:</strong> @product.UnitsSold</p>
+                        <p><strong>Average Rating:</strong> ⭐ @product.AverageRating</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Quantity:</label>
+                        <input type="number" min="1" max="@product.Stock" class="form-control w-25 d-inline-block me-2" @bind="selectedQuantity" />
+                        <button class="btn btn-success" @onclick="AddToCart">🛒 Add to Cart</button>
+                    </div>
+
+                    <a href="@product.PdfUrl" class="btn btn-outline-secondary" target="_blank">📄 Download PDF</a>
+                    <a href="/products" class="btn btn-primary ms-2">⬅ Back to Products</a>
+                </div>
             </div>
 
-            <div class="product-info">
-                <h1 class="product-title">@product.Name</h1>
-                <p class="category-name">Category: @product.Category?.Name</p>
-                <p class="product-description">@product.LongDescription</p>
+            <hr class="my-5" />
 
-                <h5>Gallery</h5>
-                <div class="row">
-                @foreach (var image in product.Images)
+            <!-- User Review Submission -->
+            <div class="mb-5">
+                <h4>Leave a Review</h4>
+            @if (isAuthenticated)
+            {
+                        <div class="mb-3">
+                            <textarea class="form-control" placeholder="Write your review here..." @bind="newReviewText"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label>Rating:</label>
+                            <select class="form-select w-25" @bind="newReviewRating">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                                        <option value="@i">@i ⭐</option>
+                        }
+                            </select>
+                        </div>
+                                <button class="btn btn-primary" @onclick="SubmitReview">Submit Review</button>
+
+            }
+            else
+            {
+                        <p><a href="/Account/Login">Log in</a> to write a review.</p>
+            }
+            </div>
+
+            <!-- Display Reviews -->
+            <div>
+                <h4>Customer Reviews</h4>
+            @if (!reviews.Any())
+            {
+                        <p>No reviews yet.</p>
+            }
+            else
+            {
+                @foreach (var r in reviews)
                 {
-                            <div class="col-md-4">
-                                <img src="@image.ImageUrl" class="img-fluid" alt="Product Image">
+                                <div class="border rounded p-3 mb-2">
+                                    <strong>@r.User?.UserName</strong> - ⭐ @r.Rating<br />
+                                    <small class="text-muted">@r.CreatedAt.ToShortDateString()</small>
+                                    <p class="mb-0">@r.Comment</p>
+                                </div>
+                }
+            }
+            </div>
+
+            <hr class="my-5" />
+
+            <!-- Related Products -->
+            <div>
+                <h4>Related Products</h4>
+                <div class="row">
+                @foreach (var rp in relatedProducts)
+                {
+                            <div class="col-md-3 mb-4">
+                                <div class="card h-100">
+                                    <a href="/product/@rp.Id">
+                                        <img src="@rp.ThumbnailUrl" class="card-img-top" alt="@rp.Name" style="height: 180px; object-fit: contain;" />
+                                    </a>
+                                    <div class="card-body">
+                                        <h6 class="card-title">@rp.Name</h6>
+                                        <p class="text-muted small">@rp.Price.ToString("0.00") RON</p>
+                                    </div>
+                                </div>
                             </div>
                 }
                 </div>
-
-                <h5>Download PDF</h5>
-                <a href="@product.PdfUrl" class="btn btn-primary" target="_blank">Download PDF</a>
             </div>
-        </div>
-}
+    }
+</div>
 
 @code {
     [Parameter] public int id { get; set; }
     private Product? product;
+    private List<Review> reviews = new();
+    private List<Product> relatedProducts = new();
+    private int selectedQuantity = 1;
+    private string newReviewText = string.Empty;
+    private int newReviewRating = 5;
+    private bool isAuthenticated = false;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        product = DbContext.Products
+        product = await DbContext.Products
             .Include(p => p.Category)
             .Include(p => p.Images)
-            .FirstOrDefault(p => p.Id == id);
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (product != null)
+        {
+            reviews = await DbContext.Reviews
+                .Include(r => r.User)
+                .Where(r => r.ProductId == product.Id)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+
+            relatedProducts = await DbContext.Products
+                .Where(p => p.CategoryId == product.CategoryId && p.Id != product.Id)
+                .Take(4)
+                .ToListAsync();
+        }
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        isAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
+    }
+
+    private async Task AddToCart()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            var appUser = await UserManager.GetUserAsync(user);
+            if (product != null && selectedQuantity > 0)
+            {
+                await CartService.AddToCartAsync(appUser, product, selectedQuantity);
+                Navigation.NavigateTo("/cart");
+            }
+        }
+        else
+        {
+            Navigation.NavigateTo("/Account/Login");
+        }
+    }
+
+    private async Task SubmitReview()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            var appUser = await UserManager.GetUserAsync(user);
+            var review = new Review
+                {
+                    ProductId = product.Id,
+                    UserId = appUser.Id,
+                    Rating = newReviewRating,
+                    Comment = newReviewText,
+                    CreatedAt = DateTime.Now
+                };
+
+            DbContext.Reviews.Add(review);
+            await DbContext.SaveChangesAsync();
+
+            newReviewText = string.Empty;
+            newReviewRating = 5;
+
+            reviews.Insert(0, review);
+        }
     }
 }
