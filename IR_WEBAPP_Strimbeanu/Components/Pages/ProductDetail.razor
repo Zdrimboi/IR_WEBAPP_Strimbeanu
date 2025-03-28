@@ -44,6 +44,10 @@
                         <p><strong>Price:</strong> @product.Price.ToString("0.00") RON</p>
                         <p><strong>Stock:</strong> @product.Stock</p>
                         <p><strong>Units Sold:</strong> @product.UnitsSold</p>
+                        <!-- 
+                            Dynamically computed rating from Reviews.
+                            Make sure your Product model has `[NotMapped] public double ComputedAverageRating => Reviews.Average(...)`
+                        -->
                         <p><strong>Average Rating:</strong> ⭐ @product.AverageRating</p>
                     </div>
 
@@ -77,8 +81,7 @@
                         }
                             </select>
                         </div>
-                                <button class="btn btn-primary" @onclick="SubmitReview">Submit Review</button>
-
+                        <button class="btn btn-primary" @onclick="SubmitReview">Submit Review</button>
             }
             else
             {
@@ -143,19 +146,23 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // Load product and related data 
         product = await DbContext.Products
             .Include(p => p.Category)
             .Include(p => p.Images)
+            .Include(p => p.Reviews) // so product.ComputedAverageRating can work
             .FirstOrDefaultAsync(p => p.Id == id);
 
         if (product != null)
         {
+            // Load separate list of reviews for display
             reviews = await DbContext.Reviews
                 .Include(r => r.User)
                 .Where(r => r.ProductId == product.Id)
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
 
+            // Load related 
             relatedProducts = await DbContext.Products
                 .Where(p => p.CategoryId == product.CategoryId && p.Id != product.Id)
                 .Take(4)
@@ -171,14 +178,12 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
-        if (user.Identity?.IsAuthenticated ?? false)
+        if (user.Identity?.IsAuthenticated ?? false && product != null && selectedQuantity > 0)
         {
             var appUser = await UserManager.GetUserAsync(user);
-            if (product != null && selectedQuantity > 0)
-            {
-                await CartService.AddToCartAsync(appUser, product, selectedQuantity);
-                Navigation.NavigateTo("/cart");
-            }
+            await CartService.AddToCartAsync(appUser, product, selectedQuantity);
+
+            Navigation.NavigateTo("/cart");
         }
         else
         {
@@ -191,7 +196,7 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
-        if (user.Identity?.IsAuthenticated ?? false)
+        if (user.Identity?.IsAuthenticated ?? false && product != null)
         {
             var appUser = await UserManager.GetUserAsync(user);
             var review = new Review
@@ -206,10 +211,15 @@
             DbContext.Reviews.Add(review);
             await DbContext.SaveChangesAsync();
 
+            // Clear form
             newReviewText = string.Empty;
             newReviewRating = 5;
 
+            // Insert into top of reviews list
             reviews.Insert(0, review);
+
+            // You could refresh product.Reviews if you want updated product.ComputedAverageRating:
+            product.Reviews.Add(review);
         }
     }
 }

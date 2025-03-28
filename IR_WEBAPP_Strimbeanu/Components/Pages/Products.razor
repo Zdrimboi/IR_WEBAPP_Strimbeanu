@@ -8,15 +8,20 @@
 @using System.Linq
 @using System.Collections.Generic
 @using Radzen
+
 @inject CartService CartService
 @inject ApplicationDbContext DbContext
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager Navigation
+
 @rendermode InteractiveServer
+
+<!-- If you really want these here (usually in layout or Host file) -->
 <link rel="stylesheet" href="_content/Radzen.Blazor/css/default-base.css" />
 <link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css" />
 <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+
 <div class="container my-5">
 
     <!-- Header -->
@@ -49,8 +54,8 @@
         <div class="col-md-3">
             <h5>Price Range</h5>
             <Radzen.Blazor.RadzenSlider Range="true"
-                          Min="@(absoluteMinPrice)"
-                          Max="@(absoluteMaxPrice)"
+                          Min="@absoluteMinPrice"
+                          Max="@absoluteMaxPrice"
                           Step="1"
                           Value="@priceRange"
                           TValue="IEnumerable<double>"
@@ -60,7 +65,6 @@
                 <small>@priceRange?.First().ToString("0.00") RON</small>
                 <small>@priceRange?.Last().ToString("0.00") RON</small>
             </div>
-
         </div>
 
         <!-- Rating Filter -->
@@ -122,8 +126,15 @@
                                 Price: <strong>@product.Price.ToString("0.00") RON</strong>
                             </p>
                             <p class="text-muted small mb-1">In stock: @product.Stock</p>
-                            <p class="text-muted small mb-1">Rating: ⭐ @product.AverageRating</p>
-                            <p class="card-text text-truncate small">@product.ShortDescription</p>
+
+                            <!-- The dynamic rating from Reviews -->
+                            <p class="text-muted small mb-1">
+                                Rating: ⭐ @product.AverageRating
+                            </p>
+
+                            <p class="card-text text-truncate small">
+                                @product.ShortDescription
+                            </p>
                             <div class="mt-auto d-flex gap-2">
                                 <input type="number"
                                        min="1"
@@ -149,16 +160,13 @@
 
     private List<CategoryFilter> categories = new();
 
-    // Price extremes as double
     private int absoluteMinPrice = 0;
     private int absoluteMaxPrice = 1;
 
-    // Two-knob slider value
     private IEnumerable<double> priceRange = new double[] { 0, 9999 };
 
     private int ratingMin = 0;
     private string sortOption = "none";
-
     private string? searchTerm;
 
     private int cartItemCount = 0;
@@ -166,44 +174,45 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Load products
+        // 1) Load all products + their Reviews + Category so rating can be computed
         allProducts = await DbContext.Products
             .Include(p => p.Category)
+            .Include(p => p.Reviews)
             .ToListAsync();
 
-        // Compute min / max
-        decimal minP = allProducts.Min(p => p.Price);
-        decimal maxP = allProducts.Max(p => p.Price);
-
-        absoluteMinPrice = (int)minP - 1;
-        absoluteMaxPrice = (int)maxP + 1;
-
-        // If no range => avoid zero-range
-        if (absoluteMaxPrice <= absoluteMinPrice)
+        // 2) Figure out the min / max price
+        if (allProducts.Any())
         {
-            absoluteMaxPrice = absoluteMinPrice + 1;
+            var minP = allProducts.Min(p => p.Price);
+            var maxP = allProducts.Max(p => p.Price);
+            absoluteMinPrice = (int)minP - 1;
+            absoluteMaxPrice = (int)maxP + 1;
+            if (absoluteMaxPrice <= absoluteMinPrice)
+            {
+                absoluteMaxPrice = absoluteMinPrice + 1;
+            }
+            priceRange = new double[] { absoluteMinPrice, absoluteMaxPrice };
         }
 
-        // default slider range
-        priceRange = new double[] { absoluteMinPrice, absoluteMaxPrice };
-
-        // Build categories
+        // 3) Build categories from the loaded products
         var catGroups = allProducts
             .Where(p => p.Category != null)
-            .GroupBy(p => p.Category.Id)
+            .GroupBy(p => p.Category!.Id)
             .Select(g => g.First().Category);
 
         categories = catGroups
+            .Where(c => c != null)
             .Select(c => new CategoryFilter
             {
-                Id = c.Id,
+                Id = c!.Id,
                 Name = c.Name,
                 IsSelected = false,
                 IsEnabled = true,
                 ItemCount = 0
-            }).ToList();
+            })
+            .ToList();
 
-        // parse ?search
+        // 4) Check if /products?search=someText
         var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
         var qp = QueryHelpers.ParseQuery(uri.Query);
         if (qp.TryGetValue("search", out var sVal))
@@ -211,15 +220,19 @@
             searchTerm = sVal;
         }
 
-        filteredProducts = new List<Product>(allProducts);
+        // 5) Initially, show everything
+        filteredProducts = allProducts.ToList();
 
-        // init cart quantities
+        // 6) Initialize cart quantity dictionary
         foreach (var p in allProducts)
         {
             quantities[p.Id] = 1;
         }
 
+        // 7) Apply filter
         RecalcFilters();
+
+        // 8) Load cart count if user is logged in
         await LoadCartCountAsync();
     }
 
@@ -237,50 +250,45 @@
 
     private void OnSliderChanged(object value)
     {
-        // The slider passes the new selected range in `value` 
-        // Convert it to IEnumerable<double>
-        var newRange = (IEnumerable<double>)value;
-
-        // Store in our field
-        priceRange = newRange;
-
-        // Then apply filters
+        priceRange = (IEnumerable<double>)value;
         RecalcFilters();
     }
 
     private void RecalcFilters()
     {
+        // Start from all
         IEnumerable<Product> query = allProducts;
 
-        // categories
+        // Category filter
         var chosenCatIds = categories
             .Where(c => c.IsSelected)
             .Select(c => c.Id)
             .ToHashSet();
-
         if (chosenCatIds.Any())
         {
             query = query.Where(p => chosenCatIds.Contains(p.CategoryId));
         }
 
-        // search
+        // Search filter
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
             query = query.Where(p => p.Name.Contains(searchTerm));
         }
 
-        // rating
+        // Rating filter
         if (ratingMin > 0)
         {
+            // Use your NotMapped rating property here
             query = query.Where(p => p.AverageRating >= ratingMin);
         }
 
-        // price
+        // Price filter
         double minVal = priceRange.First();
         double maxVal = priceRange.Last();
-        query = query.Where(p => p.Price >= (decimal)minVal && p.Price <= (decimal)maxVal);
+        query = query.Where(p => p.Price >= (decimal)minVal
+                              && p.Price <= (decimal)maxVal);
 
-        // sorting
+        // Sorting
         query = sortOption switch
         {
             "price_asc" => query.OrderBy(p => p.Price),
@@ -292,15 +300,15 @@
 
         filteredProducts = query.ToList();
 
-        // dynamic category feasibility
-        foreach (var c in categories)
+        // Recalc each category’s item count + feasibility
+        foreach (var cat in categories)
         {
-            bool was = c.IsSelected;
-            c.IsSelected = true;
+            bool wasSelected = cat.IsSelected;
+            cat.IsSelected = true; // forcibly pick this cat
             var testList = BuildTestList();
-            c.ItemCount = testList.Count;
-            c.IsEnabled = (testList.Count > 0);
-            c.IsSelected = was;
+            cat.ItemCount = testList.Count;
+            cat.IsEnabled = testList.Any();
+            cat.IsSelected = wasSelected;
         }
     }
 
@@ -308,11 +316,11 @@
     {
         IEnumerable<Product> q = allProducts;
 
+        // forcibly pick all categories that user or we're testing
         var chosenCatIds = categories
             .Where(c => c.IsSelected)
             .Select(c => c.Id)
             .ToHashSet();
-
         if (chosenCatIds.Any())
             q = q.Where(p => chosenCatIds.Contains(p.CategoryId));
 
@@ -347,12 +355,3 @@
     }
 }
 
-// CategoryFilter model
-public class CategoryFilter
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public bool IsSelected { get; set; }
-    public bool IsEnabled { get; set; } = true;
-    public int ItemCount { get; set; }
-}
