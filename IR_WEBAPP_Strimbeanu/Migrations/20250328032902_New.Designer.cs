@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IR_WEBAPP_Strimbeanu.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250328003748_Initial")]
-    partial class Initial
+    [Migration("20250328032902_New")]
+    partial class New
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -139,15 +139,15 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         {
                             Id = "user-1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "06a92ce2-0619-4541-a006-1f150b0f36ca",
+                            ConcurrencyStamp = "3f56e9cf-da16-4822-bda4-d18e7fdcabaf",
                             Email = "user1@test.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER1@TEST.COM",
                             NormalizedUserName = "USER1@TEST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEN3kOt8JoKPr/AuLqKUEduPzFjm6ZcJPiCjjg98M6ftmcN1te3WSb4xD0b0JE5qI/A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOWFXTIik1MxcXpheACj9YPZwNl1NK+jpQGV94RMOYpsf0zOeeHvexKsRjXgv6hXZQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "07fd2273-af48-4895-9d9c-32eef01a8f34",
+                            SecurityStamp = "3e5ed6c6-d044-454e-960f-2b24a091d53e",
                             TwoFactorEnabled = false,
                             UserName = "user1@test.com"
                         },
@@ -155,15 +155,15 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         {
                             Id = "user-2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1145ad2f-4351-4c07-a26e-7fe03d2a61dc",
+                            ConcurrencyStamp = "5e9121be-cac5-4f31-b531-918334510cb2",
                             Email = "user2@test.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER2@TEST.COM",
                             NormalizedUserName = "USER2@TEST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEI+YwQR6XMmAb/lMoL1FfbxUB56FANZ6QgrFHAlujKivLVTyZyUk9qXfBnfeANc3/w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJudYEgfStKwaNASOJ+yy6zOo04ahgY/tmnceQsSf2P/1BomqATP+pLfKA9NBAE22g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "05c336ec-29bc-4dc4-8d52-8b9acd9d682f",
+                            SecurityStamp = "51eb6e91-f242-4b65-a359-2661ff080f56",
                             TwoFactorEnabled = false,
                             UserName = "user2@test.com"
                         },
@@ -171,15 +171,15 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         {
                             Id = "user-3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ac47ec09-1f53-49cd-af38-648add6533a5",
+                            ConcurrencyStamp = "7b8c90c5-e126-4372-a8dd-92dcd79aa19f",
                             Email = "user3@test.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER3@TEST.COM",
                             NormalizedUserName = "USER3@TEST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGHC8QMvLg4LLHF3xu0LYHmEYDizsAlmkTSBpl4EXb16DIphwcVzot4wnZC949Cz1Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENfQdkW0i1TintngBd3+/PtQijJ+YjJQNgXZzJr8JnlTrHVCyHq/coEQ16Nz9odSDQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "10cb0288-5d1e-4ec5-b380-7c26cd23e455",
+                            SecurityStamp = "88f00d0e-2e0a-484d-9dc6-7eea3ef461cf",
                             TwoFactorEnabled = false,
                             UserName = "user3@test.com"
                         },
@@ -187,15 +187,15 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         {
                             Id = "user-4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4980c1cb-506e-4f69-9dee-62f92173918f",
+                            ConcurrencyStamp = "2f793526-cf67-4b5b-a5c1-067621985ed3",
                             Email = "user4@test.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER4@TEST.COM",
                             NormalizedUserName = "USER4@TEST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENAj6prWuoFgtJXnCdt5qx2uVqDlsRMg38R0wTLXQe/ugiwAetSI0IDXFoy4Tpmmmw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMBNtFIpSVOqG5e7Unitj/KyZ4U47/JP3y5M6rG8BEwUTvFPd8GjyVFdihwvnDAihA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "737f905b-7b2b-40b0-a10d-40ee0fd92a98",
+                            SecurityStamp = "08ede835-a458-460c-8638-72fe3d6ec1c1",
                             TwoFactorEnabled = false,
                             UserName = "user4@test.com"
                         },
@@ -203,15 +203,15 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         {
                             Id = "user-5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "776e02ae-6020-4ee9-b072-01964502825c",
+                            ConcurrencyStamp = "b2b0650d-0a9a-408d-81ef-fe8ccc317e00",
                             Email = "user5@test.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER5@TEST.COM",
                             NormalizedUserName = "USER5@TEST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEI8L1Gz6mmOS/sPquGULSlmW1H8wtOR8jjZ8Xxsb2LZMQbiZSNkh7UziKZMCgpMtTA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFAjEPhbd1CpQVakqGJS0SrWY7rbMc2z2ywYfvo8yhrfwxQ9etw8s7W4IR8xfcDUAg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f9229a16-fc89-47fd-9335-db3221087770",
+                            SecurityStamp = "9ae1ff4e-65a9-4f45-8803-ee091ec616ff",
                             TwoFactorEnabled = false,
                             UserName = "user5@test.com"
                         });
@@ -260,9 +260,6 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double>("AverageRating")
-                        .HasColumnType("float");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -307,7 +304,6 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         new
                         {
                             Id = 1,
-                            AverageRating = 4.7000000000000002,
                             CategoryId = 1,
                             LongDescription = "High-performance Laptop Apple MacBook",
                             Name = "Laptop Apple MacBook Air 13-inch",
@@ -321,7 +317,6 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         new
                         {
                             Id = 2,
-                            AverageRating = 4.5,
                             CategoryId = 1,
                             LongDescription = "Latest Android smartphone",
                             Name = "Smartphone",
@@ -335,7 +330,6 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         new
                         {
                             Id = 3,
-                            AverageRating = 4.2999999999999998,
                             CategoryId = 1,
                             LongDescription = "Wireless noise-canceling headphones",
                             Name = "Headphones",
@@ -349,7 +343,6 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         new
                         {
                             Id = 4,
-                            AverageRating = 4.2000000000000002,
                             CategoryId = 2,
                             LongDescription = "Learn C# from scratch",
                             Name = "C# Programming",
@@ -363,7 +356,6 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         new
                         {
                             Id = 5,
-                            AverageRating = 4.5999999999999996,
                             CategoryId = 2,
                             LongDescription = "Master Blazor and .NET",
                             Name = "Blazor Guide",
@@ -377,7 +369,6 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         new
                         {
                             Id = 6,
-                            AverageRating = 4.0999999999999996,
                             CategoryId = 2,
                             LongDescription = "Understand software design principles",
                             Name = "Software Design Patterns",
@@ -391,7 +382,6 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         new
                         {
                             Id = 7,
-                            AverageRating = 4.4000000000000004,
                             CategoryId = 3,
                             LongDescription = "Comfortable office chair with lumbar support",
                             Name = "Office Chair",
@@ -405,7 +395,6 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         new
                         {
                             Id = 8,
-                            AverageRating = 4.2999999999999998,
                             CategoryId = 3,
                             LongDescription = "Modern wooden office desk",
                             Name = "Desk",
@@ -419,7 +408,6 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         new
                         {
                             Id = 9,
-                            AverageRating = 4.2000000000000002,
                             CategoryId = 3,
                             LongDescription = "Spacious bookshelf for organizing books",
                             Name = "Bookshelf",
@@ -433,7 +421,6 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                         new
                         {
                             Id = 10,
-                            AverageRating = 4.5,
                             CategoryId = 3,
                             LongDescription = "Energy-efficient LED table lamp",
                             Name = "Table Lamp",

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IR_WEBAPP_Strimbeanu.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class New : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -236,7 +236,6 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Stock = table.Column<int>(type: "int", nullable: false),
                     UnitsSold = table.Column<int>(type: "int", nullable: false),
-                    AverageRating = table.Column<double>(type: "float", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -380,11 +379,11 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "user-1", 0, "06a92ce2-0619-4541-a006-1f150b0f36ca", "user1@test.com", true, false, null, "USER1@TEST.COM", "USER1@TEST.COM", "AQAAAAIAAYagAAAAEN3kOt8JoKPr/AuLqKUEduPzFjm6ZcJPiCjjg98M6ftmcN1te3WSb4xD0b0JE5qI/A==", null, false, "07fd2273-af48-4895-9d9c-32eef01a8f34", false, "user1@test.com" },
-                    { "user-2", 0, "1145ad2f-4351-4c07-a26e-7fe03d2a61dc", "user2@test.com", true, false, null, "USER2@TEST.COM", "USER2@TEST.COM", "AQAAAAIAAYagAAAAEI+YwQR6XMmAb/lMoL1FfbxUB56FANZ6QgrFHAlujKivLVTyZyUk9qXfBnfeANc3/w==", null, false, "05c336ec-29bc-4dc4-8d52-8b9acd9d682f", false, "user2@test.com" },
-                    { "user-3", 0, "ac47ec09-1f53-49cd-af38-648add6533a5", "user3@test.com", true, false, null, "USER3@TEST.COM", "USER3@TEST.COM", "AQAAAAIAAYagAAAAEGHC8QMvLg4LLHF3xu0LYHmEYDizsAlmkTSBpl4EXb16DIphwcVzot4wnZC949Cz1Q==", null, false, "10cb0288-5d1e-4ec5-b380-7c26cd23e455", false, "user3@test.com" },
-                    { "user-4", 0, "4980c1cb-506e-4f69-9dee-62f92173918f", "user4@test.com", true, false, null, "USER4@TEST.COM", "USER4@TEST.COM", "AQAAAAIAAYagAAAAENAj6prWuoFgtJXnCdt5qx2uVqDlsRMg38R0wTLXQe/ugiwAetSI0IDXFoy4Tpmmmw==", null, false, "737f905b-7b2b-40b0-a10d-40ee0fd92a98", false, "user4@test.com" },
-                    { "user-5", 0, "776e02ae-6020-4ee9-b072-01964502825c", "user5@test.com", true, false, null, "USER5@TEST.COM", "USER5@TEST.COM", "AQAAAAIAAYagAAAAEI8L1Gz6mmOS/sPquGULSlmW1H8wtOR8jjZ8Xxsb2LZMQbiZSNkh7UziKZMCgpMtTA==", null, false, "f9229a16-fc89-47fd-9335-db3221087770", false, "user5@test.com" }
+                    { "user-1", 0, "3f56e9cf-da16-4822-bda4-d18e7fdcabaf", "user1@test.com", true, false, null, "USER1@TEST.COM", "USER1@TEST.COM", "AQAAAAIAAYagAAAAEOWFXTIik1MxcXpheACj9YPZwNl1NK+jpQGV94RMOYpsf0zOeeHvexKsRjXgv6hXZQ==", null, false, "3e5ed6c6-d044-454e-960f-2b24a091d53e", false, "user1@test.com" },
+                    { "user-2", 0, "5e9121be-cac5-4f31-b531-918334510cb2", "user2@test.com", true, false, null, "USER2@TEST.COM", "USER2@TEST.COM", "AQAAAAIAAYagAAAAEJudYEgfStKwaNASOJ+yy6zOo04ahgY/tmnceQsSf2P/1BomqATP+pLfKA9NBAE22g==", null, false, "51eb6e91-f242-4b65-a359-2661ff080f56", false, "user2@test.com" },
+                    { "user-3", 0, "7b8c90c5-e126-4372-a8dd-92dcd79aa19f", "user3@test.com", true, false, null, "USER3@TEST.COM", "USER3@TEST.COM", "AQAAAAIAAYagAAAAENfQdkW0i1TintngBd3+/PtQijJ+YjJQNgXZzJr8JnlTrHVCyHq/coEQ16Nz9odSDQ==", null, false, "88f00d0e-2e0a-484d-9dc6-7eea3ef461cf", false, "user3@test.com" },
+                    { "user-4", 0, "2f793526-cf67-4b5b-a5c1-067621985ed3", "user4@test.com", true, false, null, "USER4@TEST.COM", "USER4@TEST.COM", "AQAAAAIAAYagAAAAEMBNtFIpSVOqG5e7Unitj/KyZ4U47/JP3y5M6rG8BEwUTvFPd8GjyVFdihwvnDAihA==", null, false, "08ede835-a458-460c-8638-72fe3d6ec1c1", false, "user4@test.com" },
+                    { "user-5", 0, "b2b0650d-0a9a-408d-81ef-fe8ccc317e00", "user5@test.com", true, false, null, "USER5@TEST.COM", "USER5@TEST.COM", "AQAAAAIAAYagAAAAEFAjEPhbd1CpQVakqGJS0SrWY7rbMc2z2ywYfvo8yhrfwxQ9etw8s7W4IR8xfcDUAg==", null, false, "9ae1ff4e-65a9-4f45-8803-ee091ec616ff", false, "user5@test.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -411,19 +410,19 @@ namespace IR_WEBAPP_Strimbeanu.Migrations
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Id", "AverageRating", "CategoryId", "LongDescription", "Name", "PdfUrl", "Price", "ShortDescription", "Stock", "ThumbnailUrl", "UnitsSold" },
+                columns: new[] { "Id", "CategoryId", "LongDescription", "Name", "PdfUrl", "Price", "ShortDescription", "Stock", "ThumbnailUrl", "UnitsSold" },
                 values: new object[,]
                 {
-                    { 1, 4.7000000000000002, 1, "High-performance Laptop Apple MacBook", "Laptop Apple MacBook Air 13-inch", "/docs/laptop.pdf", 6499.99m, "Laptop Apple MacBook", 12, "/images/laptop1.jpg", 50 },
-                    { 2, 4.5, 1, "Latest Android smartphone", "Smartphone", "/docs/phone.pdf", 2999.50m, "Android Phone", 35, "/images/phone1.jpg", 120 },
-                    { 3, 4.2999999999999998, 1, "Wireless noise-canceling headphones", "Headphones", "/docs/headphones.pdf", 499.99m, "Noise-canceling", 20, "/images/headphones1.jpg", 75 },
-                    { 4, 4.2000000000000002, 2, "Learn C# from scratch", "C# Programming", "/docs/csharp.pdf", 149.99m, "C# Book", 80, "/images/csharp1.jpg", 40 },
-                    { 5, 4.5999999999999996, 2, "Master Blazor and .NET", "Blazor Guide", "/docs/blazor.pdf", 199.99m, "Blazor Development", 50, "/images/blazor1.jpg", 65 },
-                    { 6, 4.0999999999999996, 2, "Understand software design principles", "Software Design Patterns", "/docs/designpatterns.pdf", 169.00m, "Design Patterns", 40, "/images/designpatterns1.jpg", 58 },
-                    { 7, 4.4000000000000004, 3, "Comfortable office chair with lumbar support", "Office Chair", "/docs/chair.pdf", 899.99m, "Ergonomic Chair", 18, "/images/chair1.jpg", 34 },
-                    { 8, 4.2999999999999998, 3, "Modern wooden office desk", "Desk", "/docs/desk.pdf", 1149.99m, "Wooden Desk", 15, "/images/desk1.jpg", 22 },
-                    { 9, 4.2000000000000002, 3, "Spacious bookshelf for organizing books", "Bookshelf", "/docs/bookshelf.pdf", 599.50m, "Wooden Shelf", 25, "/images/bookshelf1.jpg", 38 },
-                    { 10, 4.5, 3, "Energy-efficient LED table lamp", "Table Lamp", "/docs/lamp.pdf", 149.00m, "LED Lamp", 60, "/images/lamp1.jpg", 55 }
+                    { 1, 1, "High-performance Laptop Apple MacBook", "Laptop Apple MacBook Air 13-inch", "/docs/laptop.pdf", 6499.99m, "Laptop Apple MacBook", 12, "/images/laptop1.jpg", 50 },
+                    { 2, 1, "Latest Android smartphone", "Smartphone", "/docs/phone.pdf", 2999.50m, "Android Phone", 35, "/images/phone1.jpg", 120 },
+                    { 3, 1, "Wireless noise-canceling headphones", "Headphones", "/docs/headphones.pdf", 499.99m, "Noise-canceling", 20, "/images/headphones1.jpg", 75 },
+                    { 4, 2, "Learn C# from scratch", "C# Programming", "/docs/csharp.pdf", 149.99m, "C# Book", 80, "/images/csharp1.jpg", 40 },
+                    { 5, 2, "Master Blazor and .NET", "Blazor Guide", "/docs/blazor.pdf", 199.99m, "Blazor Development", 50, "/images/blazor1.jpg", 65 },
+                    { 6, 2, "Understand software design principles", "Software Design Patterns", "/docs/designpatterns.pdf", 169.00m, "Design Patterns", 40, "/images/designpatterns1.jpg", 58 },
+                    { 7, 3, "Comfortable office chair with lumbar support", "Office Chair", "/docs/chair.pdf", 899.99m, "Ergonomic Chair", 18, "/images/chair1.jpg", 34 },
+                    { 8, 3, "Modern wooden office desk", "Desk", "/docs/desk.pdf", 1149.99m, "Wooden Desk", 15, "/images/desk1.jpg", 22 },
+                    { 9, 3, "Spacious bookshelf for organizing books", "Bookshelf", "/docs/bookshelf.pdf", 599.50m, "Wooden Shelf", 25, "/images/bookshelf1.jpg", 38 },
+                    { 10, 3, "Energy-efficient LED table lamp", "Table Lamp", "/docs/lamp.pdf", 149.00m, "LED Lamp", 60, "/images/lamp1.jpg", 55 }
                 });
 
             migrationBuilder.InsertData(

@@ -7,7 +7,6 @@
 @rendermode InteractiveServer
 
 <div class="container mt-4">
-
     <!-- 🖼️ Hero Section -->
     <div class="p-5 mb-4 bg-light rounded-3 shadow">
         <div class="container-fluid py-5">
@@ -17,7 +16,7 @@
         </div>
     </div>
 
-    <!-- 🎉 Deal of the Day -->
+    <!-- 🌟 Deal of the Day -->
     @if (dealOfTheDay != null)
     {
             <div class="mb-5">
@@ -25,14 +24,20 @@
                 <div class="card shadow-sm border-0">
                     <div class="row g-0 align-items-center">
                         <div class="col-md-4">
-                            <img src="@dealOfTheDay.ThumbnailUrl" class="img-fluid rounded-start" alt="@dealOfTheDay.Name" style="object-fit: cover; height: 100%; width: 100%;" />
+                            <img src="@dealOfTheDay.ThumbnailUrl" class="img-fluid rounded-start"
+                                 alt="@dealOfTheDay.Name"
+                                 style="object-fit: cover; height: 100%; width: 100%;" />
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
                                 <h5 class="card-title">@dealOfTheDay.Name</h5>
                                 <p class="card-text">@dealOfTheDay.ShortDescription</p>
-                                <p class="fw-bold">Only @dealOfTheDay.Price.ToString("0.00") RON</p>
-                                <a class="btn btn-success" href="/product/@dealOfTheDay.Id">Grab Deal</a>
+                                <p class="fw-bold">
+                                    Only @dealOfTheDay.Price.ToString("0.00") RON
+                                </p>
+                                <a class="btn btn-success" href="/product/@dealOfTheDay.Id">
+                                    Grab Deal
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -48,7 +53,9 @@
                 var banner = bannerProducts[i];
                     <div class="carousel-item @(i == 0 ? "active" : "")">
                         <a href="/product/@banner.Id">
-                            <img src="@banner.ThumbnailUrl" class="d-block w-100" style="height: 300px; object-fit: cover;" alt="@banner.Name" />
+                            <img src="@banner.ThumbnailUrl" class="d-block w-100"
+                                 style="height: 300px; object-fit: cover;"
+                                 alt="@banner.Name" />
                             <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
                                 <h5>@banner.Name</h5>
                                 <p>@banner.ShortDescription</p>
@@ -57,17 +64,19 @@
                     </div>
             }
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button"
+                data-bs-target="#featuredCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+        <button class="carousel-control-next" type="button"
+                data-bs-target="#featuredCarousel" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
     </div>
 
-    <!-- 🍿 Top Sellers -->
+    <!-- 🔥 Best Sellers -->
     <h3 class="mb-4">🔥 Best Sellers</h3>
     <div class="row mb-5">
         @foreach (var product in bestSellers)
@@ -75,11 +84,16 @@
                 <div class="col-md-3 mb-4">
                     <div class="card h-100 shadow-sm">
                         <a href="/product/@product.Id">
-                            <img src="@product.ThumbnailUrl" class="card-img-top" style="object-fit: cover; height: 200px;" />
+                            <img src="@product.ThumbnailUrl"
+                                 class="card-img-top"
+                                 style="object-fit: cover; height: 200px;" />
                         </a>
                         <div class="card-body">
                             <h5 class="card-title">@product.Name</h5>
-                            <p class="text-muted small">Sold: @product.UnitsSold | ⭐ @product.AverageRating</p>
+                            <p class="text-muted small">
+                                Sold: @product.UnitsSold |
+                                    ⭐ @product.AverageRating
+                            </p>
                             <p class="fw-bold">@product.Price.ToString("0.00") RON</p>
                             <a href="/product/@product.Id" class="btn btn-outline-primary w-100">View</a>
                         </div>
@@ -105,7 +119,7 @@
         }
     </div>
 
-    <!-- 🛍️ Top Rated -->
+    <!-- 🌟 Top Rated -->
     <h3 class="mb-4">🌟 Top Rated Products</h3>
     <div class="row">
         @foreach (var product in topRatedProducts)
@@ -113,11 +127,15 @@
                 <div class="col-md-3 mb-4">
                     <div class="card h-100 shadow-sm">
                         <a href="/product/@product.Id">
-                            <img src="@product.ThumbnailUrl" class="card-img-top" style="object-fit: cover; height: 200px;" />
+                            <img src="@product.ThumbnailUrl"
+                                 class="card-img-top"
+                                 style="object-fit: cover; height: 200px;" />
                         </a>
                         <div class="card-body">
                             <h5 class="card-title">@product.Name</h5>
-                            <p class="text-muted small">⭐ @product.AverageRating</p>
+                            <p class="text-muted small">
+                                    ⭐ @product.AverageRating
+                            </p>
                             <p class="fw-bold">@product.Price.ToString("0.00") RON</p>
                             <a href="/product/@product.Id" class="btn btn-outline-primary w-100">View</a>
                         </div>
@@ -153,18 +171,27 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // 1) Load categories (no special logic needed)
         categories = await DbContext.Categories.ToListAsync();
 
+        // 2) Best Sellers: include reviews to compute rating
         bestSellers = await DbContext.Products
+            .Include(p => p.Reviews)
             .OrderByDescending(p => p.UnitsSold)
             .Take(4)
             .ToListAsync();
 
-        topRatedProducts = await DbContext.Products
-            .OrderByDescending(p => p.AverageRating)
-            .Take(4)
+        // 3) For top rated: we load all, then sort in memory by ComputedAverageRating
+        var allForRating = await DbContext.Products
+            .Include(p => p.Reviews)
             .ToListAsync();
 
+        topRatedProducts = allForRating
+            .OrderByDescending(p => p.AverageRating)
+            .Take(4)
+            .ToList();
+
+        // 4) For latestReviews, we just load them with user + product
         latestReviews = await DbContext.Reviews
             .Include(r => r.User)
             .Include(r => r.Product)
@@ -172,13 +199,18 @@
             .Take(6)
             .ToListAsync();
 
-        bannerProducts = await DbContext.Products
-            .OrderByDescending(p => p.UnitsSold + (int)p.AverageRating * 10)
+        // 5) For banner, we do the same approach: load, then sort in memory
+        //    by (UnitsSold + ComputedAverageRating*10)
+        bannerProducts = allForRating
+            .OrderByDescending(p => p.UnitsSold + p.AverageRating * 10)
             .Take(3)
-            .ToListAsync();
+            .ToList();
 
-        dealOfTheDay = await DbContext.Products
-            .OrderBy(p => Guid.NewGuid())
-            .FirstOrDefaultAsync();
+        // 6) Deal of the day: random pick
+        //    load from the same 'allForRating' list or from DB again
+        var random = new Random();
+        dealOfTheDay = allForRating.OrderBy(x => random.Next()).FirstOrDefault();
+
+        // done
     }
 }

@@ -20,17 +20,25 @@ namespace IR_WEBAPP_Strimbeanu.Models
 
         public decimal Price { get; set; }
         public int Stock { get; set; }
-        public int UnitsSold { get; set; } = 0;
+        public int UnitsSold { get; set; }
 
-        public double AverageRating { get; set; }
+        // REMOVE the old 'public double AverageRating' if you want a truly computed rating
 
+        // The category relation
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
 
+        // Collections
         public List<ProductImage> Images { get; set; } = new();
         public List<ProductTag> Tags { get; set; } = new();
         public List<Review> Reviews { get; set; } = new();
+
+        [NotMapped]
+        public double AverageRating => (Reviews == null || Reviews.Count == 0)
+            ? 0.0
+            : Reviews.Average(r => r.Rating);
     }
+
 
 
     public class ProductImage
