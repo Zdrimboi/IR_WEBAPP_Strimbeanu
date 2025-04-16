@@ -43,8 +43,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         );
 
         modelBuilder.Entity<Product>().HasData(
-            new Product { Id = 1, Name = "Laptop Apple MacBook Air 13-inch", ShortDescription = "Laptop Apple MacBook", LongDescription = "High-performance Laptop Apple MacBook", ThumbnailUrl = "/images/laptop1.jpg", PdfUrl = "/docs/laptop.pdf", CategoryId = 1, Price = 6499.99m, Stock = 12, UnitsSold = 50 },
-            new Product { Id = 2, Name = "Smartphone", ShortDescription = "Android Phone", LongDescription = "Latest Android smartphone", ThumbnailUrl = "/images/phone1.jpg", PdfUrl = "/docs/phone.pdf", CategoryId = 1, Price = 2999.50m, Stock = 35, UnitsSold = 120 },
+            new Product { Id = 1, Name = "Laptop Apple MacBook Air 13-inch", ShortDescription = "Laptop Apple MacBook", LongDescription = "High-performance Laptop Apple MacBook", ThumbnailUrl = "/images/laptop1.jpg", PdfUrl = "/docs/Factsheet - 13-inch MacBook Pro.pdf", CategoryId = 1, Price = 6499.99m, Stock = 12, UnitsSold = 50 },
+            new Product { Id = 2, Name = "Smartphone", ShortDescription = "Android Phone", LongDescription = "Latest Android smartphone", ThumbnailUrl = "/images/phone1.jpg", PdfUrl = "", CategoryId = 1, Price = 2999.50m, Stock = 35, UnitsSold = 120 },
             new Product { Id = 3, Name = "Headphones", ShortDescription = "Noise-canceling", LongDescription = "Wireless noise-canceling headphones", ThumbnailUrl = "/images/headphones1.jpg", PdfUrl = "/docs/headphones.pdf", CategoryId = 1, Price = 499.99m, Stock = 20, UnitsSold = 75 },
             new Product { Id = 4, Name = "C# Programming", ShortDescription = "C# Book", LongDescription = "Learn C# from scratch", ThumbnailUrl = "/images/csharp1.jpg", PdfUrl = "/docs/csharp.pdf", CategoryId = 2, Price = 149.99m, Stock = 80, UnitsSold = 40 },
             new Product { Id = 5, Name = "Blazor Guide", ShortDescription = "Blazor Development", LongDescription = "Master Blazor and .NET", ThumbnailUrl = "/images/blazor1.jpg", PdfUrl = "/docs/blazor.pdf", CategoryId = 2, Price = 199.99m, Stock = 50, UnitsSold = 65 },
